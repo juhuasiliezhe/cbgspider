@@ -3,11 +3,17 @@
 import unittest
 from selenium import webdriver
 from bs4 import BeautifulSoup
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 #获取href
 class seleniumTest(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.PhantomJS(executable_path="D:/phantomjs-2.1.1-windows/bin/phantomjs.exe")
+        dcap = dict(DesiredCapabilities.PHANTOMJS)
+        dcap["phantomjs.page.settings.userAgent"] = (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:25.0) Gecko/20100101 Firefox/25.0 "
+        )
+        # dcap["phantomjs.page.settings.loadImages"] = False
+        self.driver = webdriver.PhantomJS(executable_path='D:/phantomjs-2.1.1-windows/bin/phantomjs.exe', desired_capabilities=dcap)
 
     def testEle(self):
         driver = self.driver

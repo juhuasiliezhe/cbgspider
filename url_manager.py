@@ -4,11 +4,12 @@ Created on 2017 2017-7-28 上午11:24:04
 
 @author: Alan
 '''
-
+import myssqls
 class UrlManager(object):
     def __init__(self):
-        self.new_urls = set()
-        self.old_urls = set()
+        thedata=myssqls.DoSql()
+        self.new_urls = thedata.selectNewUrl()
+        self.old_urls = thedata.selectOldUrl()
     
     def add_new_url(self, url):
         if url is None:

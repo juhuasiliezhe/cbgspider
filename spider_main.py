@@ -30,28 +30,28 @@ class SpiderMain(object):
         now = datetime.datetime.now()
         print now.strftime('%Y-%m-%d %H:%M:%S')  
         count = 1
-        self.urls.add_new_url(root_url)
+        # self.urls.add_new_url(root_url)
 
-        while self.urls.has_new_url():
-            try:
-                new_url = self.urls.get_new_url()
-                print 'craw %d :%s' % (count,new_url)
-                html_cont = self.downloader.download(new_url)
-                print html_cont
-                new_urls, new_data = self.parser.parse(new_url,html_cont)
+        # while self.urls.has_new_url():
+        try:
+            new_url = self.urls.get_new_url()
+            # print 'craw %d :%s' % (count,new_url)
+            self.downloader.download(new_url)
+            # print html_cont
+            # new_urls, new_data = self.parser.parse(new_url,html_cont)
+            #
+            # self.urls.add_new_urls(new_urls)
+            #
+            # self.outputer.collect_data(new_data)
+            # if count == 2:
+            #     break
+            # self.urls.add_new_url('http://www.ccgp.gov.cn/cggg/zygg/cjgg/index_%d.htm' % count)
+            count = count + 1
 
-                self.urls.add_new_urls(new_urls)
+        except ValueError, Argument:
+            print 'craw failed' ,Argument
                 
-                self.outputer.collect_data(new_data)
-                if count == 10:
-                    break
-                # self.urls.add_new_url('http://www.ccgp.gov.cn/cggg/zygg/cjgg/index_%d.htm' % count)
-                count = count + 1
-
-            except:
-                print 'craw failed'
-                
-        self.outputer.output_html()
+        # self.outputer.output_html()
         nows = datetime.datetime.now()
         print nows.strftime('%Y-%m-%d %H:%M:%S')  
 
