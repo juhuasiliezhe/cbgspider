@@ -20,15 +20,21 @@ class HtmlDownloader(object):
         # dcap["phantomjs.page.settings.loadImages"] = False
         self.driver = webdriver.PhantomJS(executable_path='D:/phantomjs-2.1.1-windows/bin/phantomjs.exe',desired_capabilities=dcap)
     def valueData(self,value,vlaue2):
-        strinfo = re.compile('<[\s\S]*?>')
-        b = strinfo.sub('', value)
-        return str(b.replace(vlaue2,"").replace(" ",""))
-
+        try:
+            strinfo = re.compile('<[\s\S]*?>')
+            b = strinfo.sub('', value)
+            return str(b.replace(vlaue2,"").replace(" ",""))
+        except:
+            return ""
     def getTheData(self,rolr,reme,content):
-        matchObj = re.search(r''+rolr+'', str(content), re.M | re.I)
-        strinfo = re.compile('<[\s\S]*?>')
-        b = strinfo.sub('', matchObj.group())
-        return str(b.replace(reme, "").replace(" ", ""))
+        try:
+            matchObj = re.search(r''+rolr+'', str(content), re.M | re.I)
+            strinfo = re.compile('<[\s\S]*?>')
+            b = strinfo.sub('', matchObj.group())
+            return str(b.replace(reme, "").replace(" ", ""))
+        except:
+            return ""
+
 
     def download(self,url):
         if url is None:
@@ -42,7 +48,7 @@ class HtmlDownloader(object):
         content=soup.find_all("div", attrs={"class": "infoList goodsInfo"})
         content=str(content).decode('unicode-escape')
 
-
+        print "角色网址："+url
         # 编号
         matchObj = re.search(r'编号[\s\S]*?</li>',str(content), re.M | re.I)
         number=parserValue.valueData(matchObj.group(),"编号：")
@@ -330,9 +336,164 @@ class HtmlDownloader(object):
         threeachievement = parserValue.getTheData('三界功绩[\s\S]*?</td>', "三界功绩：", str(content))
         print "三界功绩：" + threeachievement
 
-        role_basic = soup.find_all("table", attrs={"id": "role_basic"})
+        # role_basic = soup.find_all("table", attrs={"id": "role_basic"})
 
-        # driver.find_element_by_id("role_skill").click()
+
+        #####人物技能
+        driver.find_element_by_id("role_skill").click()
+
+        time.sleep(1)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        content = soup.find_all("div", attrs={"id": "role_info_box"})
+        content = str(content).decode('unicode-escape')
+
+        print "###########人物生活技能######"
+        # 强身术
+        # buildhealth
+        buildhealth = parserValue.getTheData('<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0201.gif" width="40"/>[\s\S]*?</p>', "", str(content))
+        print "强身术：" + buildhealth
+
+        # 冥想
+        # meditation
+        meditation = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0202.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "冥想：" + meditation
+
+
+        # 暗器技巧
+        # weapon
+        weapon = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0203.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "暗器技巧：" + weapon
+
+        # 打造技巧
+        # makes
+        makes = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0204.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "打造技巧：" + makes
+
+        # 裁缝技巧
+        # tailor
+        tailor = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0205.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "裁缝技巧：" + tailor
+
+        # 中药医理
+        # medicine
+        medicine = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0206.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "中药医理：" + medicine
+
+        # 炼金术
+        # alchemy
+        alchemy = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0207.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "炼金术：" + alchemy
+
+        # 烹饪技巧
+        # cooking
+        cooking = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0208.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "烹饪技巧：" + cooking
+
+        # 追捕技巧
+        # chase
+        chase = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0209.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "追捕技巧：" + chase
+
+        # 逃离技巧
+        # escape
+        escape = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0210.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "逃离技巧：" + escape
+
+        # 养生之道
+        # health
+        health = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0211.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "养生之道：" + health
+
+        # 健身术
+        # bodybuilding
+        bodybuilding = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0212.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "健身术：" + bodybuilding
+
+        # 巧匠之术
+        # carpenter
+        carpenter = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0216.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "巧匠之术：" + carpenter
+
+        # 熔炼技巧
+        # melting
+        melting = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0217.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "熔炼技巧：" + melting
+
+        # 灵石技巧
+        # stone
+        stone = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0218.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "灵石技巧：" + stone
+
+        # 强壮
+        # strong
+        strong = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0230.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "强壮：" + strong
+
+        # 淬灵之术
+        # soul
+        soul = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0231.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "淬灵之术：" + soul
+
+        # 神速
+        # godspeed
+        godspeed = parserValue.getTheData(
+            '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0237.gif" width="40"/>[\s\S]*?</p>',
+            "", str(content))
+        print "神速：" + godspeed
+
+        # 打造熟练度
+        # makenum
+        makenum = parserValue.getTheData('打造熟练度[\s\S]*?</td>',"打造熟练度：", str(content))
+        print "打造熟练度：" + makenum
+
+        # 裁缝熟练度
+        # tailornum
+        tailornum = parserValue.getTheData('裁缝熟练度[\s\S]*?</td>', "裁缝熟练度：", str(content))
+
+        print "裁缝熟练度：" + tailornum
+
+        #人物的装备
+        driver.find_element_by_id("role_equips").click()
+
+        time.sleep(1)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        contentUsing = soup.find_all("table", attrs={"id": "RoleUsingEquips"})
+        contentUsing = str(contentUsing).decode('unicode-escape')
+        print "###########人物装备######"
+        parserValue.getEquipData(str(contentUsing))
+
         # time.sleep(1)
 
 
@@ -346,6 +507,34 @@ class HtmlDownloader(object):
         # fout = open('output1.html', 'w')
         # fout.write(str(soup1))
         # return  html.text
+        driver.close()
+    #获取装备信息
+    def getEquipData(self, content):
+        try:
+            strinfo = re.findall('<img[\s\S]*?>',content)
+
+            for value in strinfo:
+                #判断是灵饰
+                lingshi = re.search(r'【灵饰类型】', str(value), re.M | re.I)
+                if lingshi:
+                    print '这是灵饰：' + value
+                else:
+                    matchObj = re.search(r'【装备角色】[\s\S]*?\"', str(value), re.M | re.I)
+                    #判断是武器
+                    if matchObj:
+                        if '，'in str(matchObj.group()):
+                            print '这是武器：'+value
+                        #判断是防具
+                        else:
+                            print '这是防具：' + value
+                    else:
+                        print '这是防具：' + value
+            return ""
+            # strinfo = re.compile('<[\s\S]*?>')
+            # b = strinfo.sub('', matchObj.group())
+            # return str(b.replace(reme, "").replace(" ", ""))
+        except:
+            return ""
 
 
 
