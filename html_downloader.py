@@ -512,12 +512,216 @@ class HtmlDownloader(object):
     def getEquipData(self, content):
         try:
             strinfo = re.findall('<img[\s\S]*?>',content)
-
+            GettheClass = HtmlDownloader()
             for value in strinfo:
                 #判断是灵饰
                 lingshi = re.search(r'【灵饰类型】', str(value), re.M | re.I)
+                # 名称
+                name=GettheClass.getParserEquip('data_equip_name=\"[\s\S]*?\"',value)
+                datas=GettheClass.getParserEquip('data_equip_desc=\"[\s\S]*?\"',value)
                 if lingshi:
-                    print '这是灵饰：' + value
+                    dictionary = {}
+                    for thekey in datas.split("#r"):
+                        if '等级'in thekey:
+                            dictionary['level'] = str(thekey).replace("等级 ",'')
+
+                        elif '法术伤害'in thekey:
+                            onevalue = '法术伤害'
+                            twovalue = 'spell'
+                            if dictionary[twovalue]:
+                                dictionary[twovalue] = dictionary[twovalue] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '耐久度'in thekey:
+                            onevalue = '耐久度'
+                            twovalue = 'durable'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '精炼等级'in thekey:
+                            onevalue = '精炼等级'
+                            twovalue = 'exercise'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '物理暴击等级'in thekey:
+                            onevalue = '物理暴击等级'
+                            twovalue = 'physicscrit'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '狂暴等级'in thekey:
+                            onevalue = '狂暴等级'
+                            twovalue = 'rage'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '固定伤害'in thekey:
+                            onevalue = '固定伤害'
+                            twovalue = 'fixed'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '伤害'in thekey:
+
+                            onevalue = '伤害'
+                            twovalue = 'hurt'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '穿刺等级 'in thekey:
+                            onevalue = '穿刺等级'
+                            twovalue = 'puncture'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif ''in thekey:
+                            onevalue = '速度'
+                            twovalue = 'speed'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '封印命中等级' in thekey:
+                            onevalue = '封印命中等级'
+                            twovalue = 'seal'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '防御' in thekey:
+                            onevalue = '防御'
+                            twovalue = 'defense'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '法术暴击等级' in thekey:
+                            onevalue = '法术暴击等级'
+                            twovalue = 'magiccrit'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '法术防御' in thekey:
+                            onevalue = '法术防御'
+                            twovalue = 'defend'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '气血' in thekey:
+                            onevalue = '气血'
+                            twovalue = 'blood'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '抵抗封印等级' in thekey:
+                            onevalue = '抵抗封印等级'
+                            twovalue = 'resistseal'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '格挡值' in thekey:
+                            onevalue = '格挡值'
+                            twovalue = 'block'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '气血回复效果' in thekey:
+
+                            onevalue = '气血回复效果'
+                            twovalue = 'reply'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '法术伤害' in thekey:
+                            onevalue = '法术伤害'
+                            twovalue = 'result'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '治疗能力' in thekey:
+
+                            onevalue = '治疗能力'
+                            twovalue = 'treatment'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+
+                        elif '抗物理暴击等级' in thekey:
+                            onevalue = '抗物理暴击等级'
+                            twovalue = 'resistphysicscrit'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
+                                    onevalue + " ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+                        elif '抗法术暴击等级' in thekey:
+                            onevalue='抗法术暴击等级'
+                            twovalue='resistmagiccrit'
+                            if dictionary[str(twovalue)]:
+                                dictionary[str(twovalue)] = dictionary[str(twovalue)]+str(thekey).replace(onevalue+" ", '')
+                            else:
+                                dictionary[str(twovalue)] = str(thekey).replace(onevalue+" ", '')
+
+
+
+                    print '这是灵饰【' + name+'】:'
+                    for key in sorted(dictionary.keys()):  # yes
+                        print  key+':'+dictionary[key]
                 else:
                     matchObj = re.search(r'【装备角色】[\s\S]*?\"', str(value), re.M | re.I)
                     #判断是武器
@@ -533,9 +737,19 @@ class HtmlDownloader(object):
             # strinfo = re.compile('<[\s\S]*?>')
             # b = strinfo.sub('', matchObj.group())
             # return str(b.replace(reme, "").replace(" ", ""))
-        except:
+        except ValueError, Argument:
+            print 'craw failed' ,Argument
             return ""
 
+    def getParserEquip(self, role,content):
+        try:
+            matchObj = re.search(r''+role+'', str(content), re.M | re.I)
+            if matchObj:
+                return matchObj.group()
+            return ""
+
+        except:
+            return ""
 
 
 
