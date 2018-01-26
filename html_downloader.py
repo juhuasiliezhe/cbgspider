@@ -43,7 +43,6 @@ class HtmlDownloader(object):
 
         driver = self.driver
         driver.get(url)
-        parserValue=HtmlDownloader()
         time.sleep(2)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         content=soup.find_all("div", attrs={"class": "infoList goodsInfo"})
@@ -52,17 +51,17 @@ class HtmlDownloader(object):
         print "角色网址："+url
         # 编号
         matchObj = re.search(r'编号[\s\S]*?</li>',str(content), re.M | re.I)
-        number=parserValue.valueData(matchObj.group(),"编号：")
+        number=self.valueData(matchObj.group(),"编号：")
         print "编号："+number
 
         # 卖家ID
         matchObj = re.search(r'名称[\s\S]*?</li>',str(content), re.M | re.I)
-        sellerid = parserValue.valueData(matchObj.group(),"名称：")
+        sellerid = self.valueData(matchObj.group(),"名称：")
         print "名称："+sellerid
 
         # 是否上架
         matchObj = re.search(r'是否上架[\s\S]*?</li>', str(content), re.M | re.I)
-        puton = parserValue.valueData(matchObj.group(), "是否上架：")
+        puton = self.valueData(matchObj.group(), "是否上架：")
         print "是否上架：" + puton
 
         # 区服
@@ -70,17 +69,17 @@ class HtmlDownloader(object):
         servicedata = str(servicediv).decode('unicode-escape')
         matchObj = re.search(r'梦幻玩家[\s\S]*?</div>', str(servicedata), re.M | re.I)
         matchObj2 = re.search(r'<p>[\s\S]*?</p>', str(matchObj.group()), re.M | re.I)
-        servicearea = parserValue.valueData(matchObj2.group(), "梦幻玩家")
+        servicearea = self.valueData(matchObj2.group(), "梦幻玩家")
         print "区服："+servicearea
 
         # 价格
         matchObj = re.search(r'价格[\s\S]*?（元）', str(content), re.M | re.I)
-        price = parserValue.valueData(matchObj.group(), "价格：")
+        price = self.valueData(matchObj.group(), "价格：")
         print "价格："+price
 
         # 是否接受还价
         matchObj = re.search(r'是否接受还价[\s\S]*?</li>', str(content), re.M | re.I)
-        haggle = parserValue.valueData(matchObj.group(), "是否接受还价：")
+        haggle = self.valueData(matchObj.group(), "是否接受还价：")
         print "是否接受还价：" + haggle
 
         # 出售剩余时间
@@ -89,252 +88,252 @@ class HtmlDownloader(object):
         print "是出售剩余时间：" + str(saletime).replace(",","").replace("\"","").replace(" : ","")
 
         # 级别
-        level = parserValue.getTheData('级别[\s\S]*?</td>', "级别：", str(content))
+        level = self.getTheData('级别[\s\S]*?</td>', "级别：", str(content))
         print "级别：" + level
 
         # 角色类型
-        roletype = parserValue.getTheData('角色[\s\S]*?</td>', "角色：", str(content))
+        roletype = self.getTheData('角色[\s\S]*?</td>', "角色：", str(content))
         print "角色类型：" + roletype
 
         # 名称
-        rolename = parserValue.getTheData('<td><strong>名称[\s\S]*?</td>', "名称：", str(content))
+        rolename = self.getTheData('<td><strong>名称[\s\S]*?</td>', "名称：", str(content))
         print "名称：" + rolename
 
         # 人气
-        lifes = parserValue.getTheData('人气[\s\S]*?</td>', "人气：", str(content))
+        lifes = self.getTheData('人气[\s\S]*?</td>', "人气：", str(content))
         print "人气：" + lifes
 
         # 帮派
-        faction=parserValue.getTheData('帮派[\s\S]*?</td>',"帮派：",str(content))
+        faction=self.getTheData('帮派[\s\S]*?</td>',"帮派：",str(content))
         print "帮派：" + faction
 
         # 帮贡
-        factionoffer = parserValue.getTheData('帮贡[\s\S]*?</td>', "帮贡：", str(content))
+        factionoffer = self.getTheData('帮贡[\s\S]*?</td>', "帮贡：", str(content))
         print "帮贡：" + factionoffer
 
         # 门派
-        school = parserValue.getTheData('门派[\s\S]*?</td>', "门派：", str(content))
+        school = self.getTheData('门派[\s\S]*?</td>', "门派：", str(content))
         print "门派：" + school
 
         # 门贡
-        schooloffer = parserValue.getTheData('门贡[\s\S]*?</td>', "门贡：", str(content))
+        schooloffer = self.getTheData('门贡[\s\S]*?</td>', "门贡：", str(content))
         print "门贡：" + schooloffer
 
         # 气血
-        blood = parserValue.getTheData('气血[\s\S]*?</td>', "气血：", str(content))
+        blood = self.getTheData('气血[\s\S]*?</td>', "气血：", str(content))
         print "气血：" + blood
 
         # 体质
-        physique = parserValue.getTheData('体质[\s\S]*?</td>', "体质：", str(content))
+        physique = self.getTheData('体质[\s\S]*?</td>', "体质：", str(content))
         print "体质：" + physique
 
         # 魔法
-        magic = parserValue.getTheData('魔法[\s\S]*?</td>', "魔法：", str(content))
+        magic = self.getTheData('魔法[\s\S]*?</td>', "魔法：", str(content))
         print "魔法：" + magic
 
         # 魔力
-        magicpower = parserValue.getTheData('魔力[\s\S]*?</td>', "魔力：", str(content))
+        magicpower = self.getTheData('魔力[\s\S]*?</td>', "魔力：", str(content))
         print "魔法：" + magicpower
 
         # 命中
         # hit
-        hit = parserValue.getTheData('命中[\s\S]*?</td>', "命中：", str(content))
+        hit = self.getTheData('命中[\s\S]*?</td>', "命中：", str(content))
         print "命中：" + hit
 
         # 力量
         # power
-        power = parserValue.getTheData('力量[\s\S]*?</td>', "力量：", str(content))
+        power = self.getTheData('力量[\s\S]*?</td>', "力量：", str(content))
         print "力量：" + power
 
         # 伤害
         # hurt
-        hurt = parserValue.getTheData('伤害[\s\S]*?</td>', "伤害：", str(content))
+        hurt = self.getTheData('伤害[\s\S]*?</td>', "伤害：", str(content))
         print "伤害：" + hurt
 
         # 耐力
         # endurance
-        endurance = parserValue.getTheData('耐力[\s\S]*?</td>', "耐力：", str(content))
+        endurance = self.getTheData('耐力[\s\S]*?</td>', "耐力：", str(content))
         print "耐力：" + endurance
 
         # 防御
         # defense
-        defense = parserValue.getTheData('防御[\s\S]*?</td>', "防御：", str(content))
+        defense = self.getTheData('防御[\s\S]*?</td>', "防御：", str(content))
         print "防御：" + defense
 
 
         # 敏捷
-        agile = parserValue.getTheData('敏捷[\s\S]*?</td>', "敏捷：", str(content))
+        agile = self.getTheData('敏捷[\s\S]*?</td>', "敏捷：", str(content))
         print "敏捷：" + agile
 
         # 速度
         # speed
-        speed = parserValue.getTheData('速度[\s\S]*?</td>', "速度：", str(content))
+        speed = self.getTheData('速度[\s\S]*?</td>', "速度：", str(content))
         print "速度：" + speed
 
         # 潜力
         # potential
-        potential = parserValue.getTheData('潜力[\s\S]*?</td>', "潜力：", str(content))
+        potential = self.getTheData('潜力[\s\S]*?</td>', "潜力：", str(content))
         print "潜力：" + potential
 
         # 法伤
         # spell
-        spell = parserValue.getTheData('法伤[\s\S]*?</td>', "法伤：", str(content))
+        spell = self.getTheData('法伤[\s\S]*?</td>', "法伤：", str(content))
         print "法伤：" + spell
 
         # 靓号特效
         # goodnumber
-        goodnumber = parserValue.getTheData('靓号特效[\s\S]*?</td>', "靓号特效：", str(content))
+        goodnumber = self.getTheData('靓号特效[\s\S]*?</td>', "靓号特效：", str(content))
         print "靓号特效：" + goodnumber
 
         # 法防
         # defend
-        defend = parserValue.getTheData('法防[\s\S]*?</td>', "法防：", str(content))
+        defend = self.getTheData('法防[\s\S]*?</td>', "法防：", str(content))
         print "法防：" + defend
 
         # 成就点数
         # achievement
-        achievement = parserValue.getTheData('成就点数[\s\S]*?</td>', "成就点数：", str(content))
+        achievement = self.getTheData('成就点数[\s\S]*?</td>', "成就点数：", str(content))
         print "成就点数：" + achievement
 
         # 获得经验
         # experience
-        experience = parserValue.getTheData('获得经验[\s\S]*?</td>', "获得经验：", str(content))
+        experience = self.getTheData('获得经验[\s\S]*?</td>', "获得经验：", str(content))
         print "获得经验：" + experience
 
         # 已用潜能果数量
         # potentialnum
-        potentialnum = parserValue.getTheData('已用潜能果数量[\s\S]*?</td>', "已用潜能果数量：", str(content))
+        potentialnum = self.getTheData('已用潜能果数量[\s\S]*?</td>', "已用潜能果数量：", str(content))
         print "已用潜能果数量：" + potentialnum
 
         # 新版乾元丹数量
         # neweditionnum
-        neweditionnum = parserValue.getTheData('新版乾元丹数量[\s\S]*?</td>', "新版乾元丹数量：", str(content))
+        neweditionnum = self.getTheData('新版乾元丹数量[\s\S]*?</td>', "新版乾元丹数量：", str(content))
         print "新版乾元丹数量：" + neweditionnum
 
         # 总经验
         # sumexperience
-        sumexperience = parserValue.getTheData('总经验[\s\S]*?</td>', "总经验：", str(content))
+        sumexperience = self.getTheData('总经验[\s\S]*?</td>', "总经验：", str(content))
         print "总经验：" + sumexperience
 
         # 月饼粽子食用量
         # mooncake
-        mooncake = parserValue.getTheData('月饼粽子食用量[\s\S]*?</td>', "月饼粽子食用量：", str(content))
+        mooncake = self.getTheData('月饼粽子食用量[\s\S]*?</td>', "月饼粽子食用量：", str(content))
         print "月饼粽子食用量：" + mooncake
 
         # 原始种族
         # original
-        original = parserValue.getTheData('原始种族[\s\S]*?</td>', "原始种族：", str(content))
+        original = self.getTheData('原始种族[\s\S]*?</td>', "原始种族：", str(content))
         print "原始种族：" + original
 
         # 已获得机缘属性
         # opportunity
-        opportunity = parserValue.getTheData('已获得机缘属性[\s\S]*?</td>', "已获得机缘属性：", str(content))
+        opportunity = self.getTheData('已获得机缘属性[\s\S]*?</td>', "已获得机缘属性：", str(content))
         print "已获得机缘属性：" + opportunity
 
         # 飞升 / 渡劫 / 化圣
         # soaring
-        soaring = parserValue.getTheData('飞升/渡劫/化圣[\s\S]*?</td>', "飞升/渡劫/化圣：", str(content))
+        soaring = self.getTheData('飞升/渡劫/化圣[\s\S]*?</td>', "飞升/渡劫/化圣：", str(content))
         print "飞升/渡劫/化圣：" + soaring
 
         # 历史门派
         # history
-        history = parserValue.getTheData('历史门派[\s\S]*?</td>', "历史门派：", str(content))
+        history = self.getTheData('历史门派[\s\S]*?</td>', "历史门派：", str(content))
         print "历史门派：" + history
 
         # 属性保存方案
         # retain
-        retain = parserValue.getTheData('属性保存方案[\s\S]*?</td>', "属性保存方案：", str(content))
+        retain = self.getTheData('属性保存方案[\s\S]*?</td>', "属性保存方案：", str(content))
         print "属性保存方案：" + retain
 
         # 攻击修炼
         # hurtcultivation
-        hurtcultivation = parserValue.getTheData('攻击修炼[\s\S]*?</td>', "攻击修炼：", str(content))
+        hurtcultivation = self.getTheData('攻击修炼[\s\S]*?</td>', "攻击修炼：", str(content))
         print "攻击修炼：" + hurtcultivation
 
         # 防御修炼
         # defenscultivation
-        defenscultivation = parserValue.getTheData('防御修炼[\s\S]*?</td>', "防御修炼：", str(content))
+        defenscultivation = self.getTheData('防御修炼[\s\S]*?</td>', "防御修炼：", str(content))
         print "防御修炼：" + defenscultivation
 
         # 法术修炼
         # magiccultivation
-        magiccultivation = parserValue.getTheData('法术修炼[\s\S]*?</td>', "法术修炼：", str(content))
+        magiccultivation = self.getTheData('法术修炼[\s\S]*?</td>', "法术修炼：", str(content))
         print "法术修炼：" + magiccultivation
 
         # 抗法修炼
         # resistspell
-        resistspell = parserValue.getTheData('抗法修炼[\s\S]*?</td>', "抗法修炼：", str(content))
+        resistspell = self.getTheData('抗法修炼[\s\S]*?</td>', "抗法修炼：", str(content))
         print "抗法修炼：" + resistspell
 
         # 猎术修炼
         # hunting
-        hunting = parserValue.getTheData('猎术修炼[\s\S]*?</td>', "猎术修炼：", str(content))
+        hunting = self.getTheData('猎术修炼[\s\S]*?</td>', "猎术修炼：", str(content))
         print "猎术修炼：" + hunting
 
         # 攻击控制力
         # hurtcon
-        hurtcon = parserValue.getTheData('攻击控制力[\s\S]*?</td>', "攻击控制力：", str(content))
+        hurtcon = self.getTheData('攻击控制力[\s\S]*?</td>', "攻击控制力：", str(content))
         print "攻击控制力：" + hurtcon
 
         # 防御控制力
         # defensecon
-        defensecon = parserValue.getTheData('防御控制力[\s\S]*?</td>', "防御控制力：", str(content))
+        defensecon = self.getTheData('防御控制力[\s\S]*?</td>', "防御控制力：", str(content))
         print "防御控制力：" + defensecon
 
         # 法术控制力
         # spellcon
-        spellcon = parserValue.getTheData('法术控制力[\s\S]*?</td>', "法术控制力：", str(content))
+        spellcon = self.getTheData('法术控制力[\s\S]*?</td>', "法术控制力：", str(content))
         print "法术控制力：" + spellcon
 
         # 抗法控制力
         # resistspellcon
-        resistspellcon = parserValue.getTheData('抗法控制力[\s\S]*?</td>', "抗法控制力：", str(content))
+        resistspellcon = self.getTheData('抗法控制力[\s\S]*?</td>', "抗法控制力：", str(content))
         print "抗法控制力：" + resistspellcon
 
         # 婚否
         # marriage
-        marriage = parserValue.getTheData('婚否[\s\S]*?</td>', "婚否：", str(content))
+        marriage = self.getTheData('婚否[\s\S]*?</td>', "婚否：", str(content))
         print "婚否：" + marriage
 
         # 同袍
         # brother
-        brother = parserValue.getTheData('同袍[\s\S]*?</td>', "同袍：", str(content))
+        brother = self.getTheData('同袍[\s\S]*?</td>', "同袍：", str(content))
         print "同袍：" + brother
 
         # 房屋
         # house
-        house = parserValue.getTheData('房屋[\s\S]*?</td>', "房屋：", str(content))
+        house = self.getTheData('房屋[\s\S]*?</td>', "房屋：", str(content))
         print "房屋：" + house
 
         # 牧场
         # pasture
-        pasture = parserValue.getTheData('牧场[\s\S]*?</td>', "牧场：", str(content))
+        pasture = self.getTheData('牧场[\s\S]*?</td>', "牧场：", str(content))
         print "牧场：" + pasture
 
         # 庭院
         # courtyard
-        courtyard = parserValue.getTheData('庭院[\s\S]*?</td>', "庭院：", str(content))
+        courtyard = self.getTheData('庭院[\s\S]*?</td>', "庭院：", str(content))
         print "庭院：" + courtyard
 
         # 社区
         # community
-        community = parserValue.getTheData('社区[\s\S]*?</td>', "社区：", str(content))
+        community = self.getTheData('社区[\s\S]*?</td>', "社区：", str(content))
         print "社区：" + community
 
         # 比武积分
         # tournament
-        defense = parserValue.getTheData('防御[\s\S]*?</td>', "防御：", str(content))
+        defense = self.getTheData('防御[\s\S]*?</td>', "防御：", str(content))
         print "防御：" + defense
 
         # 剑会积分
 
         # sword
-        sword = parserValue.getTheData('剑会积分[\s\S]*?</td>', "剑会积分：", str(content))
+        sword = self.getTheData('剑会积分[\s\S]*?</td>', "剑会积分：", str(content))
         print "剑会积分：" + sword
 
         # 三界功绩
         # threeachievement
-        threeachievement = parserValue.getTheData('三界功绩[\s\S]*?</td>', "三界功绩：", str(content))
+        threeachievement = self.getTheData('三界功绩[\s\S]*?</td>', "三界功绩：", str(content))
         print "三界功绩：" + threeachievement
 
         # role_basic = soup.find_all("table", attrs={"id": "role_basic"})
@@ -351,12 +350,12 @@ class HtmlDownloader(object):
         print "###########人物生活技能######"
         # 强身术
         # buildhealth
-        buildhealth = parserValue.getTheData('<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0201.gif" width="40"/>[\s\S]*?</p>', "", str(content))
+        buildhealth = self.getTheData('<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0201.gif" width="40"/>[\s\S]*?</p>', "", str(content))
         print "强身术：" + buildhealth
 
         # 冥想
         # meditation
-        meditation = parserValue.getTheData(
+        meditation = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0202.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "冥想：" + meditation
@@ -364,124 +363,124 @@ class HtmlDownloader(object):
 
         # 暗器技巧
         # weapon
-        weapon = parserValue.getTheData(
+        weapon = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0203.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "暗器技巧：" + weapon
 
         # 打造技巧
         # makes
-        makes = parserValue.getTheData(
+        makes = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0204.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "打造技巧：" + makes
 
         # 裁缝技巧
         # tailor
-        tailor = parserValue.getTheData(
+        tailor = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0205.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "裁缝技巧：" + tailor
 
         # 中药医理
         # medicine
-        medicine = parserValue.getTheData(
+        medicine = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0206.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "中药医理：" + medicine
 
         # 炼金术
         # alchemy
-        alchemy = parserValue.getTheData(
+        alchemy = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0207.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "炼金术：" + alchemy
 
         # 烹饪技巧
         # cooking
-        cooking = parserValue.getTheData(
+        cooking = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0208.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "烹饪技巧：" + cooking
 
         # 追捕技巧
         # chase
-        chase = parserValue.getTheData(
+        chase = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0209.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "追捕技巧：" + chase
 
         # 逃离技巧
         # escape
-        escape = parserValue.getTheData(
+        escape = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0210.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "逃离技巧：" + escape
 
         # 养生之道
         # health
-        health = parserValue.getTheData(
+        health = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0211.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "养生之道：" + health
 
         # 健身术
         # bodybuilding
-        bodybuilding = parserValue.getTheData(
+        bodybuilding = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0212.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "健身术：" + bodybuilding
 
         # 巧匠之术
         # carpenter
-        carpenter = parserValue.getTheData(
+        carpenter = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0216.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "巧匠之术：" + carpenter
 
         # 熔炼技巧
         # melting
-        melting = parserValue.getTheData(
+        melting = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0217.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "熔炼技巧：" + melting
 
         # 灵石技巧
         # stone
-        stone = parserValue.getTheData(
+        stone = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0218.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "灵石技巧：" + stone
 
         # 强壮
         # strong
-        strong = parserValue.getTheData(
+        strong = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0230.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "强壮：" + strong
 
         # 淬灵之术
         # soul
-        soul = parserValue.getTheData(
+        soul = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0231.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "淬灵之术：" + soul
 
         # 神速
         # godspeed
-        godspeed = parserValue.getTheData(
+        godspeed = self.getTheData(
             '<img height="40" src="http://res.xyq.cbg.163.com/images/role_skills/0237.gif" width="40"/>[\s\S]*?</p>',
             "", str(content))
         print "神速：" + godspeed
 
         # 打造熟练度
         # makenum
-        makenum = parserValue.getTheData('打造熟练度[\s\S]*?</td>',"打造熟练度：", str(content))
+        makenum = self.getTheData('打造熟练度[\s\S]*?</td>',"打造熟练度：", str(content))
         print "打造熟练度：" + makenum
 
         # 裁缝熟练度
         # tailornum
-        tailornum = parserValue.getTheData('裁缝熟练度[\s\S]*?</td>', "裁缝熟练度：", str(content))
+        tailornum = self.getTheData('裁缝熟练度[\s\S]*?</td>', "裁缝熟练度：", str(content))
 
         print "裁缝熟练度：" + tailornum
 
@@ -493,7 +492,7 @@ class HtmlDownloader(object):
         contentUsing = soup.find_all("table", attrs={"id": "RoleUsingEquips"})
         contentUsing = str(contentUsing).decode('unicode-escape')
         print "###########人物装备######"
-        parserValue.getEquipData(str(contentUsing))
+        self.getEquipData(str(contentUsing))
 
         # time.sleep(1)
 
@@ -509,224 +508,133 @@ class HtmlDownloader(object):
         # fout.write(str(soup1))
         # return  html.text
         driver.close()
+
+
+
     #获取装备信息
     def getEquipData(self, content):
         try:
             strinfo = re.findall('<img[\s\S]*?>',content)
-            GettheClass = HtmlDownloader()
             for value in strinfo:
                 dictionary = {}#灵饰
-                wuqiary = {}#灵饰
+                wuqiary = {}#武器
                 #判断是灵饰
                 lingshi = re.search(r'【灵饰类型】', str(value), re.M | re.I)
                 # 名称
-                name=GettheClass.getParserEquip('data_equip_name=\"[\s\S]*?\"',value)
-                datas=GettheClass.getParserEquip('data_equip_desc=\"[\s\S]*?\"',value)
-                getlever=GettheClass.getParserEquip('data_equip_type_desc=\"[\s\S]*?\"',value)
+                name=self.getParserEquip('data_equip_name=\"[\s\S]*?\"',value)
+                datas=self.getParserEquip('data_equip_desc=\"[\s\S]*?\"',value)
+                getlever=self.getParserEquip('data_equip_type_desc=\"[\s\S]*?\"',value)
                 for thevalue in getlever.split("#r"):
                     if '【装备条件】等级' in thevalue:
                         dictionary['等级level'] = str(thevalue).replace("【装备条件】等级", '')
                     elif '【灵饰类型】' in thevalue:
                         dictionary['灵饰类型'] = str(thevalue).replace("【灵饰类型】", '')
 
-
-
                 if lingshi:
 
                     for thekey in datas.split("#r"):
+
                         if '法术伤害'in thekey:
                             onevalue = '法术伤害'
                             twovalue = '法伤spell'
-                            if twovalue in dictionary.keys():
-                                dictionary[twovalue] = dictionary[twovalue] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '耐久度'in thekey:
                             onevalue = '耐久度'
                             twovalue = '耐久度durable'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '精炼等级'in thekey:
                             onevalue = '精炼等级'
                             twovalue = '精炼等级exercise'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '物理暴击等级'in thekey:
                             onevalue = '物理暴击等级'
                             twovalue = '物理暴击等级physicscrit'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '狂暴等级'in thekey:
                             onevalue = '狂暴等级'
                             twovalue = '狂暴rage'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '固定伤害'in thekey:
                             onevalue = '固定伤害'
                             twovalue = '固伤fixed'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '伤害'in thekey:
 
                             onevalue = '伤害'
                             twovalue = '伤害hurt'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '穿刺等级 'in thekey:
                             onevalue = '穿刺等级'
                             twovalue = '穿刺puncture'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '速度'in thekey:
                             onevalue = '速度'
                             twovalue = '速度speed'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '封印命中等级' in thekey:
                             onevalue = '封印命中等级'
                             twovalue = '封印命中seal'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '防御' in thekey:
                             onevalue = '防御'
                             twovalue = '防御defense'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '法术暴击等级' in thekey:
                             onevalue = '法术暴击等级'
                             twovalue = '法术暴击magiccrit'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '法术防御' in thekey:
                             onevalue = '法术防御'
                             twovalue = '法防defend'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '气血' in thekey:
                             onevalue = '气血'
                             twovalue = '气血blood'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '抵抗封印等级' in thekey:
                             onevalue = '抵抗封印等级'
                             twovalue = '抵抗封印resistseal'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '格挡值' in thekey:
                             onevalue = '格挡值'
                             twovalue = '格挡值block'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
-
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
                         elif '气血回复效果' in thekey:
-
                             onevalue = '气血回复效果'
                             twovalue = '回复reply'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
-
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
                         elif '法术伤害' in thekey:
                             onevalue = '法术伤害'
                             twovalue = '法术伤害result'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
-
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
                         elif '治疗能力' in thekey:
-
                             onevalue = '治疗能力'
                             twovalue = '治疗treatment'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
-
-
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
                         elif '抗物理暴击等级' in thekey:
                             onevalue = '抗物理暴击等级'
                             twovalue = '抗物理暴击等级resistphysicscrit'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
-                                    onevalue + " ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '抗法术暴击等级' in thekey:
                             onevalue='抗法术暴击等级'
-                            twovalue='resistmagiccrit'
-                            if twovalue in dictionary.keys():
-                                dictionary[str(twovalue)] = dictionary[str(twovalue)]+str(thekey).replace(onevalue+" ", '')
-                            else:
-                                dictionary[str(twovalue)] = str(thekey).replace(onevalue+" ", '')
-
-
+                            twovalue='抗法术暴击resistmagiccrit'
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                     print '这是灵饰【' + name+'】:' +json.dumps(dictionary, encoding="UTF-8", ensure_ascii=False)
 
@@ -736,16 +644,10 @@ class HtmlDownloader(object):
                     if matchObj:
                         if '，'in str(matchObj.group()):
                             for thekey in datas.split("#r"):
-
                                 if '法术伤害' in thekey:
-                                    onevalue = '法术伤害'
-                                    twovalue = '法伤spell'
-                                    if twovalue in dictionary.keys():
-                                        dictionary[twovalue] = dictionary[twovalue] + str(thekey).replace(
-                                            onevalue + " ", '')
-                                    else:
-                                        dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
-
+                                    self.setDictData('法术伤害', '法伤spell', thekey, wuqiary)
+                                elif '抗法术暴击等级' in thekey:
+                                    self.setDictData('法术伤害', '法伤spell', thekey, wuqiary)
 
 
                             print '这是武器：'+value
@@ -772,7 +674,12 @@ class HtmlDownloader(object):
         except:
             return ""
 
-
+    def setDictData(self, onevalue,twovalue,thekey,dictionary):
+        if twovalue in dictionary.keys():
+            dictionary[twovalue] = dictionary[twovalue] + str(thekey).replace(
+                onevalue + " ", '')
+        else:
+            dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
 
 
 

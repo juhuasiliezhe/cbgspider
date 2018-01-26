@@ -2,18 +2,32 @@
 #coding:utf-8
 import re
 import json
+class HtmlDownloader(object):
+    def setDictData2(self):
+        dictionary = {}
+        dictionary2 = {}
+
+        dictionary['dfe2'] = 'ditj'
+
+        onevalue='e2'
+        twovalue='dfe24'
+        thekey='88888e2'
+        self.setDictData(onevalue,twovalue,thekey,dictionary2)
+        self.setDictData(onevalue,twovalue,thekey,dictionary)
+        print json.dumps(dictionary, encoding="UTF-8", ensure_ascii=False)
+        print json.dumps(dictionary2, encoding="UTF-8", ensure_ascii=False)
 
 
-dictionary = {}
 
-dictionary[str('dfe')] = str('ditj')
+    def setDictData(self, onevalue,twovalue,thekey,dictionary):
+        if twovalue in dictionary.keys():
+            dictionary[twovalue] = dictionary[twovalue] + str(thekey).replace(
+                onevalue + " ", '')
+        else:
+            dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
 
-
-
-thevalue='<img id="role_using_equip_190" width="50" height="50" data_equip_name="莲音玦" data_equip_type="27303" data_equip_desc="等级 100#r速度 +17#r耐久度 90#r精炼等级 1#r#G防御 +21 #cEE82EE[+8]#r#G格挡值 +28 #cEE82EE[+8]#r#W制造者：乱世何来佳人强化打造#" data_equip_type_desc="仙池清莲所化的玉玦，隐隐可闻其中仙音缭绕，长佩于身，有助修行。#r【装备条件】等级100#r【灵饰类型】佩饰" src="http://res.xyq.cbg.163.com/images/equip/small/27303.gif" lock_types="1">'
-for thekey in thevalue.split("#r"):
-    print thekey
-
-
+if __name__ == "__main__":
+    obj_spider = HtmlDownloader()
+    obj_spider.setDictData2()
 
 
