@@ -29,7 +29,7 @@ class DoSql(object):
 
     def selectDate(self,sql):
         # 打开数据库连接
-        db = MySQLdb.connect(host='47.94.213.30', user='root', passwd='chenshixiao321', db='cbg', charset='utf8')
+        db = MySQLdb.connect(111)
         # 使用cursor()方法获取操作游标
         cursor = db.cursor()
         try:
@@ -52,7 +52,7 @@ class DoSql(object):
 
     def updateDate(self,sql):
         # 打开数据库连接
-        db = MySQLdb.connect(host='47.94.213.30', user='root', passwd='chenshixiao321', db='cbg', charset='utf8')
+        db = MySQLdb.connect(111)
         # 使用cursor()方法获取操作游标
         cursor = db.cursor()
         # SQL 更新语句
@@ -70,7 +70,7 @@ class DoSql(object):
 
     def selectUrl(self,sql):
         # 打开数据库连接
-        db = MySQLdb.connect(host='47.94.213.30', user='root', passwd='chenshixiao321', db='cbg', charset='utf8')
+        db = MySQLdb.connect(111)
         # 使用cursor()方法获取操作游标
         cursor = db.cursor()
 
