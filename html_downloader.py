@@ -9,6 +9,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import re
 import time
+import json
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 class HtmlDownloader(object):
@@ -514,21 +515,29 @@ class HtmlDownloader(object):
             strinfo = re.findall('<img[\s\S]*?>',content)
             GettheClass = HtmlDownloader()
             for value in strinfo:
+                dictionary = {}#灵饰
+                wuqiary = {}#灵饰
                 #判断是灵饰
                 lingshi = re.search(r'【灵饰类型】', str(value), re.M | re.I)
                 # 名称
                 name=GettheClass.getParserEquip('data_equip_name=\"[\s\S]*?\"',value)
                 datas=GettheClass.getParserEquip('data_equip_desc=\"[\s\S]*?\"',value)
-                if lingshi:
-                    dictionary = {}
-                    for thekey in datas.split("#r"):
-                        if '等级'in thekey:
-                            dictionary['level'] = str(thekey).replace("等级 ",'')
+                getlever=GettheClass.getParserEquip('data_equip_type_desc=\"[\s\S]*?\"',value)
+                for thevalue in getlever.split("#r"):
+                    if '【装备条件】等级' in thevalue:
+                        dictionary['等级level'] = str(thevalue).replace("【装备条件】等级", '')
+                    elif '【灵饰类型】' in thevalue:
+                        dictionary['灵饰类型'] = str(thevalue).replace("【灵饰类型】", '')
 
-                        elif '法术伤害'in thekey:
+
+
+                if lingshi:
+
+                    for thekey in datas.split("#r"):
+                        if '法术伤害'in thekey:
                             onevalue = '法术伤害'
-                            twovalue = 'spell'
-                            if dictionary[twovalue]:
+                            twovalue = '法伤spell'
+                            if twovalue in dictionary.keys():
                                 dictionary[twovalue] = dictionary[twovalue] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -536,8 +545,8 @@ class HtmlDownloader(object):
 
                         elif '耐久度'in thekey:
                             onevalue = '耐久度'
-                            twovalue = 'durable'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '耐久度durable'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -545,8 +554,8 @@ class HtmlDownloader(object):
 
                         elif '精炼等级'in thekey:
                             onevalue = '精炼等级'
-                            twovalue = 'exercise'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '精炼等级exercise'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -554,8 +563,8 @@ class HtmlDownloader(object):
 
                         elif '物理暴击等级'in thekey:
                             onevalue = '物理暴击等级'
-                            twovalue = 'physicscrit'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '物理暴击等级physicscrit'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -563,8 +572,8 @@ class HtmlDownloader(object):
 
                         elif '狂暴等级'in thekey:
                             onevalue = '狂暴等级'
-                            twovalue = 'rage'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '狂暴rage'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -572,8 +581,8 @@ class HtmlDownloader(object):
 
                         elif '固定伤害'in thekey:
                             onevalue = '固定伤害'
-                            twovalue = 'fixed'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '固伤fixed'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -582,8 +591,8 @@ class HtmlDownloader(object):
                         elif '伤害'in thekey:
 
                             onevalue = '伤害'
-                            twovalue = 'hurt'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '伤害hurt'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -591,17 +600,17 @@ class HtmlDownloader(object):
 
                         elif '穿刺等级 'in thekey:
                             onevalue = '穿刺等级'
-                            twovalue = 'puncture'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '穿刺puncture'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
                                 dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
 
-                        elif ''in thekey:
+                        elif '速度'in thekey:
                             onevalue = '速度'
-                            twovalue = 'speed'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '速度speed'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -609,8 +618,8 @@ class HtmlDownloader(object):
 
                         elif '封印命中等级' in thekey:
                             onevalue = '封印命中等级'
-                            twovalue = 'seal'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '封印命中seal'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -618,8 +627,8 @@ class HtmlDownloader(object):
 
                         elif '防御' in thekey:
                             onevalue = '防御'
-                            twovalue = 'defense'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '防御defense'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -627,8 +636,8 @@ class HtmlDownloader(object):
 
                         elif '法术暴击等级' in thekey:
                             onevalue = '法术暴击等级'
-                            twovalue = 'magiccrit'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '法术暴击magiccrit'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -636,8 +645,8 @@ class HtmlDownloader(object):
 
                         elif '法术防御' in thekey:
                             onevalue = '法术防御'
-                            twovalue = 'defend'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '法防defend'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -645,8 +654,8 @@ class HtmlDownloader(object):
 
                         elif '气血' in thekey:
                             onevalue = '气血'
-                            twovalue = 'blood'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '气血blood'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -654,8 +663,8 @@ class HtmlDownloader(object):
 
                         elif '抵抗封印等级' in thekey:
                             onevalue = '抵抗封印等级'
-                            twovalue = 'resistseal'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '抵抗封印resistseal'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -663,8 +672,8 @@ class HtmlDownloader(object):
 
                         elif '格挡值' in thekey:
                             onevalue = '格挡值'
-                            twovalue = 'block'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '格挡值block'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -673,8 +682,8 @@ class HtmlDownloader(object):
                         elif '气血回复效果' in thekey:
 
                             onevalue = '气血回复效果'
-                            twovalue = 'reply'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '回复reply'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -682,8 +691,8 @@ class HtmlDownloader(object):
 
                         elif '法术伤害' in thekey:
                             onevalue = '法术伤害'
-                            twovalue = 'result'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '法术伤害result'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -692,8 +701,8 @@ class HtmlDownloader(object):
                         elif '治疗能力' in thekey:
 
                             onevalue = '治疗能力'
-                            twovalue = 'treatment'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '治疗treatment'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -702,8 +711,8 @@ class HtmlDownloader(object):
 
                         elif '抗物理暴击等级' in thekey:
                             onevalue = '抗物理暴击等级'
-                            twovalue = 'resistphysicscrit'
-                            if dictionary[str(twovalue)]:
+                            twovalue = '抗物理暴击等级resistphysicscrit'
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)] + str(thekey).replace(
                                     onevalue + " ", '')
                             else:
@@ -712,21 +721,33 @@ class HtmlDownloader(object):
                         elif '抗法术暴击等级' in thekey:
                             onevalue='抗法术暴击等级'
                             twovalue='resistmagiccrit'
-                            if dictionary[str(twovalue)]:
+                            if twovalue in dictionary.keys():
                                 dictionary[str(twovalue)] = dictionary[str(twovalue)]+str(thekey).replace(onevalue+" ", '')
                             else:
                                 dictionary[str(twovalue)] = str(thekey).replace(onevalue+" ", '')
 
 
 
-                    print '这是灵饰【' + name+'】:'
-                    for key in sorted(dictionary.keys()):  # yes
-                        print  key+':'+dictionary[key]
+                    print '这是灵饰【' + name+'】:' +json.dumps(dictionary, encoding="UTF-8", ensure_ascii=False)
+
                 else:
                     matchObj = re.search(r'【装备角色】[\s\S]*?\"', str(value), re.M | re.I)
                     #判断是武器
                     if matchObj:
                         if '，'in str(matchObj.group()):
+                            for thekey in datas.split("#r"):
+
+                                if '法术伤害' in thekey:
+                                    onevalue = '法术伤害'
+                                    twovalue = '法伤spell'
+                                    if twovalue in dictionary.keys():
+                                        dictionary[twovalue] = dictionary[twovalue] + str(thekey).replace(
+                                            onevalue + " ", '')
+                                    else:
+                                        dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
+
+
+
                             print '这是武器：'+value
                         #判断是防具
                         else:
