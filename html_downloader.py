@@ -489,10 +489,95 @@ class HtmlDownloader(object):
 
         time.sleep(1)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
+        #身上的装备
         contentUsing = soup.find_all("table", attrs={"id": "RoleUsingEquips"})
         contentUsing = str(contentUsing).decode('unicode-escape')
-        print "###########人物装备######"
+
+
+        # 包裹中的装备
+        contentHave = soup.find_all("table", attrs={"id": "RoleStoreEquips"})
+        contentHave = str(contentHave).decode('unicode-escape')
+        print "###########人物身上的装备######"
         self.getEquipData(str(contentUsing))
+        print "###########人物包裹的装备######"
+        self.getEquipData(str(contentHave))
+
+
+        print "###########人物携带的宠物######"
+        driver.find_element_by_id("role_pets").click()
+        time.sleep(1)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        thetest = re.findall(r'<td',str(soup.find_all("table", attrs={"id": "RolePets"})))
+        for val in range(len(thetest)):
+            thesetValue={}
+            driver.find_element_by_xpath("//*[@data_idx='"+str(val)+"']").click()
+            time.sleep(1)
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            contentpet = soup.find_all("table", attrs={"class": "tb02 petZiZhiTb"})
+            contentpet = str(contentpet).decode('unicode-escape')
+            #类型
+            name = self.getTheData('类型[\s\S]*?</td>', "类型：", str(contentpet))
+            thesetValue['类型name']=name
+
+            # 等级
+            level = self.getTheData('等级[\s\S]*?</td>', "等级：", str(contentpet))
+            thesetValue['等级level'] = level
+            #技能
+            petskill = soup.find_all("table", attrs={"class": "tb03"})
+            skill = re.findall(r'/images/pet_child_skill[\s\S]*?.gif', str(petskill))
+            thesetValue['技能skill'] =skill
+
+            # #宠物装备暂时不要
+            # petarm = soup.find_all("table", attrs={"id": "RolePetEquips"})
+            # petthearm = re.findall(r'/images/pet_child_skill[\s\S]*?.gif', str(petarm))
+            # thesetValue['宠物装备petskill'] = petthearm
+
+            print val+1
+            print json.dumps(thesetValue, encoding="UTF-8", ensure_ascii=False)
+
+        print "###########人物携带的祥瑞######"
+        # 祥瑞
+        driver.find_element_by_id("role_riders").click()
+        time.sleep(1)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        getxiangrui = soup.find_all("table", attrs={"id": "RoleXiangRui"})
+        getxiangrui=str(getxiangrui).decode('unicode-escape')
+        putxiangrui = re.findall(r'<th[\s\S]*?</th>', str(getxiangrui))
+        zuihou=''
+        countNum=0
+        for vd in putxiangrui:
+            if countNum==0:
+                zuihou=vd
+            else:
+                zuihou=zuihou+','+vd
+            countNum+=1
+
+        strinfo = re.compile('<[\s\S]*?>')
+        b = strinfo.sub('',str(putxiangrui))
+
+        print "祥瑞：" + b
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        # # 身上的宠物
+        # contentUsing = soup.find_all("table", attrs={"id": "RoleUsingEquips"})
+        # contentUsing = str(contentUsing).decode('unicode-escape')
+
+
 
         # time.sleep(1)
 
@@ -518,6 +603,7 @@ class HtmlDownloader(object):
             for value in strinfo:
                 dictionary = {}#灵饰
                 wuqiary = {}#武器
+                fangjuary={}#防具
                 #判断是灵饰
                 lingshi = re.search(r'【灵饰类型】', str(value), re.M | re.I)
                 # 名称
@@ -528,7 +614,7 @@ class HtmlDownloader(object):
                     if '【装备条件】等级' in thevalue:
                         dictionary['等级level'] = str(thevalue).replace("【装备条件】等级", '')
                     elif '【灵饰类型】' in thevalue:
-                        dictionary['灵饰类型'] = str(thevalue).replace("【灵饰类型】", '')
+                        dictionary['灵饰类型'] = str(thevalue).replace("【灵饰类型】", '').replace('\"','')
 
                 if lingshi:
 
@@ -644,18 +730,73 @@ class HtmlDownloader(object):
                     if matchObj:
                         if '，'in str(matchObj.group()):
                             for thekey in datas.split("#r"):
-                                if '法术伤害' in thekey:
-                                    self.setDictData('法术伤害', '法伤spell', thekey, wuqiary)
-                                elif '抗法术暴击等级' in thekey:
-                                    self.setDictData('法术伤害', '法伤spell', thekey, wuqiary)
+                                if '五行' in thekey:
+                                    thislevel= re.search(r'[0-9]+', str(value), re.M | re.I)
+                                    wuqiary['等级level']=thislevel.group()
+                                elif '命中' in thekey:
+                                    minzhong = re.findall(r'[0-9]+', thekey)
+                                    count = 0
+                                    for val in minzhong:
+                                        if count==0:
+                                            wuqiary['命中hit'] = val
+                                        else:
+                                            wuqiary['伤害hurt'] = val
+                                        count+=1
 
+                                elif '耐久度' in thekey:
+                                    naijiu = re.findall(r'[0-9]+', thekey)
+                                    count = 0
+                                    for val in naijiu:
+                                        if count==0:
+                                            wuqiary['耐久度durable'] = val
+                                        else:
+                                            wuqiary['修理失败fail'] = val
+                                        count+=1
 
-                            print '这是武器：'+value
+                                elif '锻炼等级' in thekey:
+                                    duanliandengji = re.search(r'[0-9]+', thekey)
+
+                                    duanlianbaoshi = re.search(r'宝石[\s\S]*', thekey)
+                                    wuqiary['锻炼等级exercise'] = duanliandengji.group()
+                                    wuqiary['镶嵌宝石gemstone'] = duanlianbaoshi.group().replace('宝石 ','')
+                                elif '#G#G' in thekey:
+                                    fujia = re.findall(r'[^\u4e00-\u9fa5]+[0-9]+', thekey)
+
+                                    count = 0
+                                    for val in fujia:
+                                        if count == 0:
+                                            wuqiary['附加属性additional'] = val
+                                        else:
+                                            wuqiary['附加属性additional'] = wuqiary['附加属性additional']+val
+                                        count += 1
+
+                                elif '特技' in thekey:
+                                    teji = re.findall(r'[^\u4e00-\u9fa5^#]+', thekey)
+                                    wuqiary['特技stunt'] = teji[1]
+                                elif '特效' in thekey:
+                                    texiao = re.findall(r'[^\u4e00-\u9fa5^#]+', thekey)
+                                    wuqiary['特效effects'] = texiao[1]
+                                elif '开运孔数' in thekey:
+                                    kaikong = re.findall(r'[\u4e00-\u9fa5]+', thekey)
+                                    wuqiary['开运孔数holenum'] = kaikong[1]+'/'+kaikong[2]
+                                elif '熔炼效果' in thekey:
+                                    ronglian = re.findall(r'[^\u4e00-\u9fa5][0-9]+[^\u4e00-\u9fa5^#]+',thekey)
+                                    wuqiary['熔炼效果melting'] = ronglian[0]
+
+                                elif '套装效果' in thekey:
+                                    taozhuang = re.findall(r'[^\u4e00-\u9fa5^#]+',thekey)
+                                    wuqiary['套装效果suit'] = taozhuang[0]
+
+                            print '这是武器【' + name + '】:' + json.dumps(wuqiary, encoding="UTF-8", ensure_ascii=False)
                         #判断是防具
                         else:
-                            print '这是防具：' + value
+                            for thekey in datas.split("#r"):
+                                self.setArmordata(thekey,fangjuary)
+                            print '这是防具：【' + name + '】:' + json.dumps(fangjuary, encoding="UTF-8", ensure_ascii=False)
                     else:
-                        print '这是防具：' + value
+                        for thekey in datas.split("#r"):
+                            self.setArmordata(thekey, fangjuary)
+                        print '这是防具：【' + name + '】:' + json.dumps(fangjuary, encoding="UTF-8", ensure_ascii=False)
             return ""
             # strinfo = re.compile('<[\s\S]*?>')
             # b = strinfo.sub('', matchObj.group())
@@ -682,6 +823,93 @@ class HtmlDownloader(object):
             dictionary[str(twovalue)] = str(thekey).replace(onevalue + " ", '')
 
 
+    #防具解析
+    def setArmordata(self,thekey,dictionary):
+        if '五行' in thekey:
+            thislevel = re.search(r'[0-9]+',thekey, re.M | re.I)
+            dictionary['等级level'] = thislevel.group()
+
+        elif '耐久度' in thekey:
+            naijiu = re.findall(r'[0-9]+', thekey)
+            count = 0
+            for val in naijiu:
+                if count == 0:
+                    dictionary['耐久度durable'] = val
+                else:
+                    dictionary['修理失败fail'] = val
+                count += 1
+
+        elif '防御' in thekey:
+            thetest = re.findall(r'防御[^\u4e00-\u9fa5]+[0-9]+', thekey)
+            dictionary['防御defense']=thetest[0].replace("防御 ",'')
+        elif '气血' in thekey:
+            thetest = re.findall(r'气血[^\u4e00-\u9fa5]+[0-9]+', thekey)
+            dictionary['气血blood']=thetest[0].replace("气血 ",'')
+        elif '敏捷' in thekey:
+            thetest = re.findall(r'敏捷[^\u4e00-\u9fa5]+[0-9]+', thekey)
+            dictionary['敏捷speed']=thetest[0].replace("敏捷 ",'')
+        elif '魔法' in thekey:
+            thetest = re.findall(r'魔法[^\u4e00-\u9fa5]+[0-9]+', thekey)
+            dictionary['魔法magicpower']=thetest[0].replace("魔法 ",'')
+        elif '灵力' in thekey:
+            thetest = re.findall(r'灵力[^\u4e00-\u9fa5]+[0-9]+', thekey)
+            dictionary['灵力mana'] = thetest[0].replace("灵力 ",'')
+        elif '锻炼等级' in thekey:
+
+            duanliandengji = re.search(r'[0-9]+', thekey)
+
+            duanlianbaoshi = re.search(r'宝石[\s\S]*', thekey)
+
+            dictionary['锻炼等级exercise'] = duanliandengji.group()
+
+            dictionary['镶嵌宝石gemstone'] = duanlianbaoshi.group().replace('宝石 ', '')
+
+        elif '#G#G' in thekey:
+
+            fujia = re.findall(r'[^\u4e00-\u9fa5]+[0-9]+', thekey)
+
+            count = 0
+
+            for val in fujia:
+
+                if count == 0:
+                    dictionary['附加属性reserveone'] = val
+                else:
+                    dictionary['附加属性reserveone'] = dictionary['附加属性reserveone'] + val
+
+                count += 1
+
+
+        elif '特技' in thekey:
+
+            teji = re.findall(r'[^\u4e00-\u9fa5^#]+', thekey)
+
+            dictionary['特技stunt'] = teji[1]
+
+        elif '特效' in thekey:
+
+            texiao = re.findall(r'[^\u4e00-\u9fa5^#]+', thekey)
+
+            dictionary['特效effects'] = texiao[1]
+
+        elif '开运孔数' in thekey:
+
+            kaikong = re.findall(r'[\u4e00-\u9fa5]+', thekey)
+
+            dictionary['开运孔数holenum'] = kaikong[1] + '/' + kaikong[2]
+
+        elif '熔炼效果' in thekey:
+
+            ronglian = re.findall(r'[^\u4e00-\u9fa5][0-9]+[^\u4e00-\u9fa5^#]+', thekey)
+
+            dictionary['熔炼效果melting'] = ronglian[0]
+
+
+        elif '套装效果' in thekey:
+
+            taozhuang = re.findall(r'[^\u4e00-\u9fa5^#]+', thekey)
+
+            dictionary['套装效果suit'] = taozhuang[0]
 
 
 

@@ -4,18 +4,12 @@ import re
 import json
 class HtmlDownloader(object):
     def setDictData2(self):
-        dictionary = {}
-        dictionary2 = {}
+        thislevel = re.search(r'[0-9]+', '[<table cellpadding="0" cellspacing="0" class="tb02" id="RoleXiangRui"> <tbody><tr><td class="noData">无</td></tr> </tbody></table>, <table cellpadding="0" cellspacing="0" class="tb02" id="RoleXiangRui"> <tbody><tr> <th>祥瑞总数</th> <td>1</td> </tr> <tr> <th>流云玉佩</th> <td>技能：                          无            			          </td> </tr> </tbody></table>]')
+        thetest=re.findall(r'<th[\s\S]*?</th>','[<table cellpadding="0" cellspacing="0" class="tb02" id="RoleXiangRui"> <tbody><tr><td class="noData">无</td></tr> </tbody></table>, <table cellpadding="0" cellspacing="0" class="tb02" id="RoleXiangRui"> <tbody><tr> <th>祥瑞总数</th> <td>1</td> </tr> <tr> <th>流云玉佩</th> <td>技能：                          无            			          </td> </tr> </tbody></table>]')
+        for val in thetest:
+            print val
 
-        dictionary['dfe2'] = 'ditj'
 
-        onevalue='e2'
-        twovalue='dfe24'
-        thekey='88888e2'
-        self.setDictData(onevalue,twovalue,thekey,dictionary2)
-        self.setDictData(onevalue,twovalue,thekey,dictionary)
-        print json.dumps(dictionary, encoding="UTF-8", ensure_ascii=False)
-        print json.dumps(dictionary2, encoding="UTF-8", ensure_ascii=False)
 
 
 
