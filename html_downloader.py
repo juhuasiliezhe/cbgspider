@@ -568,6 +568,7 @@ class HtmlDownloader(object):
         zuihou1 = ''
         countNum = 0
 
+
         for vd in putjingyi:
             vd = vd.replace('<th style="text-align:left">', '').replace('</th>', '')
             if countNum == 2:
