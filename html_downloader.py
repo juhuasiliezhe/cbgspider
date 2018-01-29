@@ -507,7 +507,8 @@ class HtmlDownloader(object):
         driver.find_element_by_id("role_pets").click()
         time.sleep(1)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
-        thetest = re.findall(r'<td',str(soup.find_all("table", attrs={"id": "RolePets"})))
+        thetest = re.findall(r'<td[\s\S]*?<img',str(soup.find_all("table", attrs={"id": "RolePets"})))
+        print '宠物数量'+str(len(thetest))
         for val in range(len(thetest)):
             thesetValue={}
             driver.find_element_by_xpath("//*[@data_idx='"+str(val)+"']").click()
@@ -546,16 +547,35 @@ class HtmlDownloader(object):
         zuihou=''
         countNum=0
         for vd in putxiangrui:
-            if countNum==0:
+            vd=vd.replace('<th>','').replace('</th>','')
+            if countNum==1:
                 zuihou=vd
-            else:
+            elif countNum>1:
                 zuihou=zuihou+','+vd
             countNum+=1
 
-        strinfo = re.compile('<[\s\S]*?>')
-        b = strinfo.sub('',str(putxiangrui))
+        print "祥瑞reserveone：" + zuihou
 
-        print "祥瑞：" + b
+        print "###########人物携带的锦衣######"
+        # 祥瑞
+        driver.find_element_by_id("role_clothes").click()
+        time.sleep(1)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+
+        getjingyi = soup.find_all("table", attrs={"id": "RoleClothesi"})
+        getjingyi = str(getjingyi).decode('unicode-escape')
+        putjingyi = re.findall(r'<th[\s\S]*?</th>', str(getjingyi))
+        zuihou1 = ''
+        countNum = 0
+        for vd in putjingyi:
+            vd = vd.replace('<th style="text-align:left">', '').replace('</th>', '')
+            if countNum == 2:
+                zuihou = vd
+            elif countNum > 2:
+                zuihou = zuihou + ',' + vd
+            countNum += 1
+
+        print "锦衣reservetwo：" + zuihou
 
 
 
@@ -592,7 +612,7 @@ class HtmlDownloader(object):
         # fout = open('output1.html', 'w')
         # fout.write(str(soup1))
         # return  html.text
-        driver.close()
+        # driver.close()
 
 
 
@@ -780,8 +800,15 @@ class HtmlDownloader(object):
                                     kaikong = re.findall(r'[\u4e00-\u9fa5]+', thekey)
                                     wuqiary['开运孔数holenum'] = kaikong[1]+'/'+kaikong[2]
                                 elif '熔炼效果' in thekey:
-                                    ronglian = re.findall(r'[^\u4e00-\u9fa5][0-9]+[^\u4e00-\u9fa5^#]+',thekey)
-                                    wuqiary['熔炼效果melting'] = ronglian[0]
+                                    ronglian = re.findall(r'[+|-][0-9]+[^\u4e00-\u9fa5]* ', thekey)
+                                    thrules = ''
+                                    for num in range(len(ronglian)):
+                                        if num == 0:
+                                            thrules = ronglian[num]
+                                        else:
+                                            thrules = thrules + ',' + ronglian[num]
+
+                                    wuqiary['熔炼效果melting'] = thrules
 
                                 elif '套装效果' in thekey:
                                     taozhuang = re.findall(r'[^\u4e00-\u9fa5^#]+',thekey)
@@ -839,21 +866,39 @@ class HtmlDownloader(object):
                     dictionary['修理失败fail'] = val
                 count += 1
 
-        elif '防御' in thekey:
+        elif '防御' in thekey and '符石' not in thekey:
             thetest = re.findall(r'防御[^\u4e00-\u9fa5]+[0-9]+', thekey)
-            dictionary['防御defense']=thetest[0].replace("防御 ",'')
-        elif '气血' in thekey:
+            getthevalue=''
+            for va in thetest:
+                getthevalue=va
+            dictionary['防御defense']=getthevalue.replace("防御 ",'')
+
+        elif '气血' in thekey and '符石' not in thekey:
+
             thetest = re.findall(r'气血[^\u4e00-\u9fa5]+[0-9]+', thekey)
-            dictionary['气血blood']=thetest[0].replace("气血 ",'')
-        elif '敏捷' in thekey:
+            getthevalue = ''
+            for va in thetest:
+                getthevalue = va
+            dictionary['气血blood']=getthevalue.replace("气血 ",'')
+        elif '敏捷' in thekey and '符石' not in thekey:
             thetest = re.findall(r'敏捷[^\u4e00-\u9fa5]+[0-9]+', thekey)
-            dictionary['敏捷speed']=thetest[0].replace("敏捷 ",'')
-        elif '魔法' in thekey:
+            getthevalue = ''
+            for va in thetest:
+                getthevalue = va
+            dictionary['敏捷speed']=getthevalue.replace("敏捷 ",'')
+        elif '魔法' in thekey and '符石' not in thekey:
+
             thetest = re.findall(r'魔法[^\u4e00-\u9fa5]+[0-9]+', thekey)
-            dictionary['魔法magicpower']=thetest[0].replace("魔法 ",'')
-        elif '灵力' in thekey:
+            getthevalue = ''
+            for va in thetest:
+                getthevalue = va
+            dictionary['魔法magicpower']=getthevalue.replace("魔法 ",'')
+        elif '灵力' in thekey and '符石' not in thekey:
             thetest = re.findall(r'灵力[^\u4e00-\u9fa5]+[0-9]+', thekey)
-            dictionary['灵力mana'] = thetest[0].replace("灵力 ",'')
+            getthevalue = ''
+            for va in thetest:
+                getthevalue = va
+            dictionary['灵力mana'] = getthevalue.replace("灵力 ",'')
         elif '锻炼等级' in thekey:
 
             duanliandengji = re.search(r'[0-9]+', thekey)
@@ -900,9 +945,15 @@ class HtmlDownloader(object):
 
         elif '熔炼效果' in thekey:
 
-            ronglian = re.findall(r'[^\u4e00-\u9fa5][0-9]+[^\u4e00-\u9fa5^#]+', thekey)
+            ronglian = re.findall(r'[+|-][0-9]+[^\u4e00-\u9fa5]* ', thekey)
+            thrules=''
+            for num in range(len(ronglian)):
+                if num==0:
+                    thrules=ronglian[num]
+                else:
+                    thrules=thrules+','+ronglian[num]
 
-            dictionary['熔炼效果melting'] = ronglian[0]
+            dictionary['熔炼效果melting'] = thrules
 
 
         elif '套装效果' in thekey:

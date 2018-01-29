@@ -34,9 +34,12 @@ class SpiderMain(object):
 
         # while self.urls.has_new_url():
         try:
-            new_url = self.urls.get_new_url()
+
             # print 'craw %d :%s' % (count,new_url)
-            self.downloader.download(new_url)
+            for num in range(4):
+                new_url = self.urls.get_new_url()
+                if num==2:
+                    self.downloader.download(new_url)
             # print html_cont
             # new_urls, new_data = self.parser.parse(new_url,html_cont)
             #
