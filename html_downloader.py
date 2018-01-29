@@ -555,6 +555,18 @@ class HtmlDownloader(object):
             countNum+=1
 
         print "祥瑞reserveone：" + zuihou
+        print "###########人物携带的坐骑######"
+
+        thetest1 = re.findall(r'<td[\s\S]*?<img', str(soup.find_all("table", attrs={"id": "RoleRiders"})))
+        print '坐骑数量' + str(len(thetest1))
+        for val in range(len(thetest1)):
+            driver.find_element_by_xpath("//*[@data_idx='" + str(val) + "']").click()
+            time.sleep(1)
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            contentRiders = soup.find_all("table", attrs={"class": "tb02"})
+            contentRiders = str(contentRiders).decode('unicode-escape')
+            print contentRiders
+
 
         print "###########人物携带的锦衣######"
         # 祥瑞
