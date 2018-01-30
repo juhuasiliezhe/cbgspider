@@ -13,11 +13,16 @@ driver.get('http://xyq.cbg.163.com/cgi-bin/query.py?act=query&server_id=79&areai
 driver.find_element_by_xpath("//*[@class='pages']/a[text()='下一页']").click()
 
 time.sleep(4)
-soup = BeautifulSoup(driver.page_source, 'lxml')
+soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-fout = open('output.html','w')
-fout.write(str(soup))
-print soup.get_text()
+titles =soup.find_all("a", attrs={"class": "soldImg"})
+print len(titles)
+for index in range(len(titles)):
+    print titles[index].get('href')
+
+# fout = open('output.html','w')
+# fout.write(str(soup))
+# print soup.get_text()
 
 
 
