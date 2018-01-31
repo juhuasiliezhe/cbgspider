@@ -3,6 +3,7 @@
 from selenium import webdriver
 import time
 from bs4 import BeautifulSoup
+import re
 
 driver = webdriver.PhantomJS(executable_path="D:/phantomjs-2.1.1-windows/bin/phantomjs.exe")
 driver.maximize_window()
@@ -19,6 +20,9 @@ titles =soup.find_all("a", attrs={"class": "soldImg"})
 print len(titles)
 for index in range(len(titles)):
     print titles[index].get('href')
+    print titles[index]
+    pices=re.search(r'onmousedown=[\s\S]*?\)',str(titles[index]))
+    print pices.group().replace(')','').split(',')[1]
 
 # fout = open('output.html','w')
 # fout.write(str(soup))
