@@ -849,7 +849,7 @@ class HtmlDownloader(object):
                             self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                     print '这是灵饰【' + name+'】:' +json.dumps(dictionary, encoding="UTF-8", ensure_ascii=False)
-                    whattype = 'insert into t_ornamentsdata set  websiteid=' + '\"' + url + '\",' + parserSql(dictionary)
+                    whattype = 'insert into t_ornamentsdata  websiteid=' + '\"' + url + '\",' + parserSql(dictionary)
 
                 else:
                     matchObj = re.search(r'【装备角色】[\s\S]*?\"', str(value), re.M | re.I)
