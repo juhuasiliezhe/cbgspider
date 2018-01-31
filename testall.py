@@ -6,8 +6,12 @@ import torndb
 import json
 
 def process(num):
-    df='.0'
-    print int(float(df))
+
+    dff='{"skill": ["/images/pet_child_skill/0310.gif", "/images/pet_child_skill/0424.gif", "/images/pet_child_skill/0510.gif", "/images/pet_child_skill/0575.gif", "/images/pet_child_skill/0576.gif", "/images/pet_child_skill/0661.gif", "/images/pet_child_skill/0428.gif"], "name": "吸血鬼", "level": 180}'
+
+    # thekey=dff.replace(': [','=').replace('\", \"/',',').replace(': ','=').replace(']','').replace('{','').replace('}','')
+    thekey=dff.replace('{\"','').replace('[','').replace('\", \"/',',').replace('], \"',',').replace('\":','=')
+    print  thekey
 
 
 

@@ -24,7 +24,7 @@ class SpiderMain(object):
             # while self.urls.has_new_url():
             new_url = self.urls.get_new_url()
             # if num==5:
-            self.downloader.download('http://xyq.cbg.163.com/equip?s=221&eid=201801242000113-221-KP8MSNNLJ80Y')
+            self.downloader.download('http://xyq.cbg.163.com/equip?s=221&eid=201801162000113-221-M5XS94ORRMBK')
 
 
         except ValueError, Argument:
