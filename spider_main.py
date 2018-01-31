@@ -6,8 +6,6 @@ Created on 2017-7-28
 '''
 import url_manager
 import html_downloader
-import html_parser
-import html_outputer
 import datetime
 
 class SpiderMain(object):
@@ -23,10 +21,10 @@ class SpiderMain(object):
         # while self.urls.has_new_url():
         try:
             # for num in range(17):
-            while self.urls.has_new_url():
-                new_url = self.urls.get_new_url()
-                # if num==5:
-                self.downloader.download(new_url)
+            # while self.urls.has_new_url():
+            new_url = self.urls.get_new_url()
+            # if num==5:
+            self.downloader.download('http://xyq.cbg.163.com/equip?s=221&eid=201801242000113-221-KP8MSNNLJ80Y')
 
 
         except ValueError, Argument:
