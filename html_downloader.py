@@ -14,13 +14,16 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import multiprocessing
 import url_manager
 import pymysql as MySQLdb
+import myssqls
 import sys
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 
 class HtmlDownloader(object):
     def __init__(self):
         self.urls = url_manager.UrlManager()
+        self.thesql = myssqls.DoSql()
         dcap = dict(DesiredCapabilities.PHANTOMJS)
         dcap["phantomjs.page.settings.userAgent"] = (
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:25.0) Gecko/20100101 Firefox/25.0 "
@@ -81,7 +84,7 @@ class HtmlDownloader(object):
             # 级别
             level = self.getTheData('级别[\s\S]*?</td>', "级别：", str(content))
             ###print "级别：" + level
-            rolesAllDate['level']=int(level)
+            rolesAllDate['level']=int(float(level+'.0'))
 
             # 角色类型
             roletype = self.getTheData('角色[\s\S]*?</td>', "角色：", str(content))
@@ -93,19 +96,7 @@ class HtmlDownloader(object):
             ###print "名称：" + rolename
             rolesAllDate['rolename'] = rolename
 
-            # # 人气
-            # lifes = self.getTheData('人气[\s\S]*?</td>', "人气：", str(content))
-            # print "人气：" + lifes
-            # rolesAllDate['lifes'] = lifes
 
-            # # 帮派
-            # faction=self.getTheData('帮派[\s\S]*?</td>',"帮派：",str(content))
-            # print "帮派：" + faction
-            # rolesAllDate['faction'] = faction
-
-            # # 帮贡
-            # factionoffer = self.getTheData('帮贡[\s\S]*?</td>', "帮贡：", str(content))
-            # print "帮贡：" + factionoffer
 
             # 门派
             school = self.getTheData('门派[\s\S]*?</td>', "门派：", str(content))
@@ -115,83 +106,83 @@ class HtmlDownloader(object):
             # 门贡
             schooloffer = self.getTheData('门贡[\s\S]*?</td>', "门贡：", str(content))
             ###print "门贡：" + schooloffer
-            rolesAllDate['schooloffer'] = int(schooloffer)
+            rolesAllDate['schooloffer'] = int(float(schooloffer+'.0'))
 
             # 气血
             blood = self.getTheData('气血[\s\S]*?</td>', "气血：", str(content))
             ###print "气血：" + blood
-            rolesAllDate['blood'] = int(blood)
+            rolesAllDate['blood'] = int(float(blood+'.0'))
 
 
             # 体质
             physique = self.getTheData('体质[\s\S]*?</td>', "体质：", str(content))
             ###print "体质：" + physique
-            rolesAllDate['physique'] = int(physique)
+            rolesAllDate['physique'] = int(float(physique+'.0'))
 
             # 魔法
             magic = self.getTheData('魔法[\s\S]*?</td>', "魔法：", str(content))
             ###print "魔法：" + magic
-            rolesAllDate['magic'] =int(magic)
+            rolesAllDate['magic'] =int(float(magic+'.0'))
 
             # 魔力
             magicpower = self.getTheData('魔力[\s\S]*?</td>', "魔力：", str(content))
             ###print "魔力：" + magicpower
-            rolesAllDate['magicpower'] = int(magicpower)
+            rolesAllDate['magicpower'] = int(float(magicpower+'.0'))
 
 
             # 命中
             # hit
             hit = self.getTheData('命中[\s\S]*?</td>', "命中：", str(content))
             ###print "命中：" + hit
-            rolesAllDate['hit'] = int(hit)
+            rolesAllDate['hit'] = int(float(hit+'.0'))
 
             # 力量
             # power
             power = self.getTheData('力量[\s\S]*?</td>', "力量：", str(content))
             ###print "力量：" + power
-            rolesAllDate['power'] = int(power)
+            rolesAllDate['power'] = int(float(power+'.0'))
 
             # 伤害
             # hurt
             hurt = self.getTheData('伤害：</strong>[\s\S]*?</td>', "伤害：", str(content))
             ###print "伤害：" + hurt
-            rolesAllDate['hurt'] = int(hurt)
+            rolesAllDate['hurt'] = int(float(hurt+'.0'))
 
             # 耐力
             # endurance
             endurance = self.getTheData('耐力[\s\S]*?</td>', "耐力：", str(content))
             ###print "耐力：" + endurance
-            rolesAllDate['endurance'] = int(endurance)
+            rolesAllDate['endurance'] = int(float(endurance+'.0'))
 
             # 防御
             # defense
             defense = self.getTheData('防御[\s\S]*?</td>', "防御：", str(content))
             ###print "防御：" + defense
-            rolesAllDate['defense'] = int(defense)
+            rolesAllDate['defense'] = int(float(defense+'.0'))
 
 
             # 敏捷
             agile = self.getTheData('敏捷[\s\S]*?</td>', "敏捷：", str(content))
             ###print "敏捷：" + agile
-            rolesAllDate['agile'] = int(agile)
+            rolesAllDate['agile'] = int(float(agile+'.0'))
 
             # 速度
             # speed
             speed = self.getTheData('速度[\s\S]*?</td>', "速度：", str(content))
             ###print "速度：" + speed
-            rolesAllDate['speed'] = int(speed)
+            rolesAllDate['speed'] = int(float(speed+'.0'))
 
             # 潜力
             # potential
             potential = self.getTheData('潜力[\s\S]*?</td>', "潜力：", str(content))
             ###print "潜力：" + potential
-            rolesAllDate['potential'] = int(potential)
+            rolesAllDate['potential'] = int(float(potential+'.0'))
 
             # 法伤
             # spell
             spell = self.getTheData('法伤[\s\S]*?</td>', "法伤：", str(content))
             ###print "法伤：" + spell
-            rolesAllDate['spell'] = int(spell)
+            rolesAllDate['spell'] = int(float(spell+'.0'))
 
             # 靓号特效
             # goodnumber
@@ -203,14 +194,16 @@ class HtmlDownloader(object):
             # defend
             defend = self.getTheData('法防[\s\S]*?</td>', "法防：", str(content))
             ###print "法防：" + defend
-            rolesAllDate['defend'] = int(defend)
+            rolesAllDate['defend'] = int(float(defend+'.0'))
 
             # 成就点数
             # achievement
             achievement = self.getTheData('成就点数[\s\S]*?</td>', "成就点数：", str(content))
             ###print "成就点数：" + achievement
-            rolesAllDate['achievement'] = int(achievement)
-
+            try:
+                rolesAllDate['achievement'] = int(float(achievement+'.0'))
+            except:
+                rolesAllDate['achievement'] = 0
             # 获得经验
             # experience
             experience = self.getTheData('获得经验[\s\S]*?</td>', "获得经验：", str(content))
@@ -221,13 +214,18 @@ class HtmlDownloader(object):
             # potentialnum
             potentialnum = self.getTheData('已用潜能果数量[\s\S]*?</td>', "已用潜能果数量：", str(content))
             ###print "已用潜能果数量：" + potentialnum
-            rolesAllDate['potentialnum'] = int(potentialnum)
+            rolesAllDate['potentialnum'] = int(float(potentialnum+'.0'))
 
             # 新版乾元丹数量
             # neweditionnum
+
             neweditionnum = self.getTheData('新版乾元丹数量[\s\S]*?</td>', "新版乾元丹数量：", str(content))
+            if len(neweditionnum)==0:
+                neweditionnum = self.getTheData('已兑换乾元丹数量[\s\S]*?</td>', "已兑换乾元丹数量：", str(content))
             ###print "新版乾元丹数量：" + neweditionnum
-            rolesAllDate['neweditionnum'] = int(neweditionnum)
+            theneweditionnum=re.search(r'[0-9]+',neweditionnum)
+            print theneweditionnum.group()
+            rolesAllDate['neweditionnum'] = int(float(theneweditionnum.group()+'.0'))
 
             # 总经验
             # sumexperience
@@ -239,7 +237,10 @@ class HtmlDownloader(object):
             # mooncake
             mooncake = self.getTheData('月饼粽子食用量[\s\S]*?</td>', "月饼粽子食用量：", str(content))
             ###print "月饼粽子食用量：" + mooncake
-            rolesAllDate['mooncake'] = int(mooncake)
+            try:
+                rolesAllDate['mooncake'] = int(float(mooncake + '.0'))
+            except:
+                rolesAllDate['mooncake'] = 0
 
             # 原始种族
             # original
@@ -311,7 +312,7 @@ class HtmlDownloader(object):
             # defensecon
             defensecon = self.getTheData('防御控制力[\s\S]*?</td>', "防御控制力：", str(content))
             ###print "防御控制力：" + defensecon
-            rolesAllDate['defensecon'] = int(physique)
+            rolesAllDate['defensecon'] = int(defensecon)
 
             # 法术控制力
             # spellcon
@@ -325,56 +326,37 @@ class HtmlDownloader(object):
             ###print "抗法控制力：" + resistspellcon
             rolesAllDate['resistspellcon'] = int(resistspellcon)
 
-            # # 婚否
-            # # marriage
-            # marriage = self.getTheData('婚否[\s\S]*?</td>', "婚否：", str(content))
-            # print "婚否：" + marriage
-            # rolesAllDate['marriage'] = marriage
 
-            # # 同袍
-            # # brother
-            # brother = self.getTheData('同袍[\s\S]*?</td>', "同袍：", str(content))
-            # print "同袍：" + brother
-            # rolesAllDate['brother'] = brother
-
-            # # 房屋
-            # # house
-            # house = self.getTheData('房屋[\s\S]*?</td>', "房屋：", str(content))
-            # print "房屋：" + house
-
-            # # 牧场
-            # # pasture
-            # pasture = self.getTheData('牧场[\s\S]*?</td>', "牧场：", str(content))
-            # print "牧场：" + pasture
-
-            # # 庭院
-            # # courtyard
-            # courtyard = self.getTheData('庭院[\s\S]*?</td>', "庭院：", str(content))
-            # print "庭院：" + courtyard
-
-            # # 社区
-            # # community
-            # community = self.getTheData('社区[\s\S]*?</td>', "社区：", str(content))
-            # print "社区：" + community
 
             # 比武积分
             # tournament
-            defense = self.getTheData('防御[\s\S]*?</td>', "防御：", str(content))
-            ###print "比武积分：" + defense
-            rolesAllDate['defense'] = int(defense)
+            tournament = self.getTheData('比武积分[\s\S]*?</td>', "比武积分：", str(content))
+            ###print "比武积分：" + tournament
+            try:
+                rolesAllDate['tournament'] = int(tournament)
+            except:
+                rolesAllDate['tournament'] = 0
 
             # 剑会积分
 
             # sword
             sword = self.getTheData('剑会积分[\s\S]*?</td>', "剑会积分：", str(content))
             ###print "剑会积分：" + sword
-            rolesAllDate['sword'] = int(sword)
+            try:
+                rolesAllDate['sword'] = int(sword)
+            except:
+                rolesAllDate['sword'] = 0
+
 
             # 三界功绩
             # threeachievement
             threeachievement = self.getTheData('三界功绩[\s\S]*?</td>', "三界功绩：", str(content))
             ###print "三界功绩：" + threeachievement
-            rolesAllDate['threeachievement'] = int(threeachievement)
+            try:
+                rolesAllDate['threeachievement'] = int(threeachievement)
+            except:
+                rolesAllDate['threeachievement'] = 0
+
 
             # role_basic = soup.find_all("table", attrs={"id": "role_basic"})
 
@@ -548,7 +530,7 @@ class HtmlDownloader(object):
 
             # sts =json.dumps(rolesAllDate, encoding="UTF-8", ensure_ascii=False).encode('unicode-escape').decode( 'string_escape')
             sts =json.dumps(rolesAllDate, encoding="UTF-8", ensure_ascii=False)
-            print url
+            # print url
             thekey=sts.encode("utf-8").replace('\":','=').replace(', \"',',').replace("{\"",'').replace('\"}','').replace('}','')
             ###print '人物的属性数据：'+thekey
 
@@ -601,6 +583,8 @@ class HtmlDownloader(object):
                 #技能
                 petskill = soup.find_all("table", attrs={"class": "tb03"})
                 skill = re.findall(r'/images/pet_child_skill[\s\S]*?.gif', str(petskill))
+                if len(skill)==0:
+                    skill=''
                 thesetValue['skill'] =skill
                 print val+1
                 petsget= json.dumps(thesetValue, encoding="UTF-8", ensure_ascii=False).encode("utf-8")
@@ -609,6 +593,7 @@ class HtmlDownloader(object):
 
                 petsql=str('insert into t_petdata set websiteid=\"'+url+'\", '+petsget2)
                 print petsql
+
                 getAllSql.append(petsql)
             print "###########人物携带的祥瑞######"
             # 祥瑞
@@ -649,11 +634,13 @@ class HtmlDownloader(object):
                 b = strinfo.sub('',getdates.group())
 
                 theallkill = ''
+
                 for vals in range(len(getskill)):
                     theallkill += getskill[vals] + '*'
-
-                zuoqizong+=zuoqizong+b+','+theallkill+';'
-
+                if len(zuoqizong)==0:
+                    zuoqizong =b + ',' + theallkill + ';'
+                else:
+                    zuoqizong=zuoqizong+b + ',' + theallkill + ';'
             print zuoqizong.replace('类型：','')
 
             print "###########人物携带的锦衣######"
@@ -677,21 +664,32 @@ class HtmlDownloader(object):
                     zuihou = zuihou + ',' + vd
                 countNum += 1
 
-            print "锦衣reservetwo：" + zuihou
+            print "锦衣reservetwo：" + zuihou.replace('<th>','')
 
             # db = MySQLdb.connect(host='47.94.213.30', user='root', passwd='chenshixiao321', db='cbg', charset='utf8')
 
-            renwushuxingsql='update t_roleData set zuoji=\"'+zuoqizong.replace('类型：','')+'\",jinyi=\"'+zuihou+'\", crawler=1 , '+renwushuxingsqlthekey+' where websiteid='+'\"'+url+'\"'
+            renwushuxingsql='update t_roleData set zuoji=\"'+zuoqizong.replace('类型：','')+'\",jinyi=\"'+zuihou.replace('<th>','')+'\", crawler=1 , '+renwushuxingsqlthekey+' where websiteid='+'\"'+url+'\"'
             getAllSql.append(renwushuxingsql)
             print renwushuxingsql
 
-
+            db = MySQLdb.connect(host='47.94.213.30', user='root', passwd='chenshixiao321', db='cbg', charset='utf8')
             print len(getAllSql)
             countthe=1
+            thegetdelsql='delete from t_armordata where websiteid='+'\"'+url+'\"'
+            thegetdelsql2='delete from t_armsdata where websiteid='+'\"'+url+'\"'
+            thegetdelsql3='delete from t_ornamentsdata where websiteid='+'\"'+url+'\"'
+            thegetdelsql4='delete from t_petdata where websiteid='+'\"'+url+'\"'
+            self.thesql.insertDataGetBig(thegetdelsql, db)
+            self.thesql.insertDataGetBig(thegetdelsql2, db)
+            self.thesql.insertDataGetBig(thegetdelsql3, db)
+            self.thesql.insertDataGetBig(thegetdelsql4, db)
             for imsql in getAllSql:
                 print '第'+str(countthe)+'条sql'
                 print imsql
+                self.thesql.insertDataGetBig(imsql, db)
                 countthe+=1
+
+            db.close()
 
 
 
@@ -752,6 +750,8 @@ class HtmlDownloader(object):
                 for thevalue in getlever.split("#r"):
                     if '【装备条件】等级' in thevalue:
                         dictionary['level'] = str(thevalue).replace("【装备条件】等级", '')
+                        df = re.search(r'等级[0-9]+', str(thevalue))
+                        fangjuary['level'] = df.group().replace('等级','')
                     elif '【灵饰类型】' in thevalue:
                         dictionary['name'] = str(thevalue).replace("【灵饰类型】", '').replace('\"','')
 
@@ -777,6 +777,10 @@ class HtmlDownloader(object):
                         elif '物理暴击等级'in thekey:
                             onevalue = '物理暴击等级'
                             twovalue = 'physicscrit'
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                        elif '法术伤害' in thekey:
+                            onevalue = '法术伤害'
+                            twovalue = 'result'
                             self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '狂暴等级'in thekey:
@@ -809,10 +813,15 @@ class HtmlDownloader(object):
                             onevalue = '封印命中等级'
                             twovalue = 'seal'
                             self.setDictData(onevalue, twovalue, thekey, dictionary)
+                        elif '法术防御' in thekey:
+                            onevalue = '法术防御'
+                            twovalue = 'defend'
+                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '防御' in thekey:
                             onevalue = '防御'
                             twovalue = 'defense'
+                            print thekey
                             self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                         elif '法术暴击等级' in thekey:
@@ -820,10 +829,7 @@ class HtmlDownloader(object):
                             twovalue = 'magiccrit'
                             self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        elif '法术防御' in thekey:
-                            onevalue = '法术防御'
-                            twovalue = 'defend'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+
 
                         elif '气血' in thekey:
                             onevalue = '气血'
@@ -843,10 +849,7 @@ class HtmlDownloader(object):
                             onevalue = '气血回复效果'
                             twovalue = 'reply'
                             self.setDictData(onevalue, twovalue, thekey, dictionary)
-                        elif '法术伤害' in thekey:
-                            onevalue = '法术伤害'
-                            twovalue = 'result'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+
                         elif '治疗能力' in thekey:
                             onevalue = '治疗能力'
                             twovalue = 'treatment'
@@ -862,8 +865,9 @@ class HtmlDownloader(object):
                             self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                     print '这是灵饰【' + name+'】:' +json.dumps(dictionary, encoding="UTF-8", ensure_ascii=False)
-                    whattype = 'insert into t_ornamentsdata set  websiteid=' + '\"' + url + '\",' + parserSql(dictionary)
-                    getAllSql.append(whattype)
+                    if len(parserSql(dictionary)) > 1:
+                        whattype = 'insert into t_ornamentsdata set  websiteid=' + '\"' + url + '\",' + parserSql(dictionary)
+                        getAllSql.append(whattype)
 
                 else:
                     matchObj = re.search(r'【装备角色】[\s\S]*?\"', str(value), re.M | re.I)
@@ -917,8 +921,12 @@ class HtmlDownloader(object):
                                     wuqiary['stunt'] = teji[1]
                                 elif '特效' in thekey:
                                     texiao = re.findall(r'[^\u4e00-\u9fa5^#]+', thekey)
-
-                                    wuqiary['effects'] = texiao[1]
+                                    for dfdd in texiao:
+                                        print dfdd
+                                    try:
+                                        wuqiary['effects'] = texiao[1]
+                                    except:
+                                        wuqiary['effects'] = texiao[0].replace('特效：','')
 
                                 elif '开运孔数' in thekey:
                                     kaikong = re.findall(r'[\u4e00-\u9fa5]+', thekey)
@@ -939,24 +947,28 @@ class HtmlDownloader(object):
                                     wuqiary['suit'] = taozhuang[0]
 
                             print '这是武器【' + name + '】:' + json.dumps(wuqiary, encoding="UTF-8", ensure_ascii=False)
-                            whattype = 'insert into t_armsdata set name='+name.replace('data_equip_name=','')+' , websiteid=' + '\"' + url + '\",' + parserSql(wuqiary)
-                            getAllSql.append(whattype)
+                            if len(parserSql(wuqiary))>1:
+                                whattype = 'insert into t_armsdata set name='+name.replace('data_equip_name=','')+' , websiteid=' + '\"' + url + '\",' + parserSql(wuqiary)
+                                getAllSql.append(whattype)
                         #判断是防具
                         else:
                             for thekey in datas.split("#r"):
-                                self.setArmordata(thekey,fangjuary)
-                            print '这是防具：【' + name + '】:' + json.dumps(fangjuary, encoding="UTF-8", ensure_ascii=False)
-                            if '三界密令' not in name:
-                                whattype = 'insert into t_armordata set name='+name.replace('data_equip_name=','')+', websiteid=' + '\"' + url + '\",' + parserSql(fangjuary)
-                                getAllSql.append(whattype)
+                                if  '符石' not in thekey:
+                                    self.setArmordata(thekey,fangjuary)
+                                print '这是防具：【' + name + '】:' + json.dumps(fangjuary, encoding="UTF-8", ensure_ascii=False)
+                                if len(parserSql(fangjuary)) > 1:
+                                    whattype = 'insert into t_armordata set name='+name.replace('data_equip_name=','')+', websiteid=' + '\"' + url + '\",' + parserSql(fangjuary)
+                                    getAllSql.append(whattype)
                     else:
                         for thekey in datas.split("#r"):
-                            self.setArmordata(thekey, fangjuary)
+                            if '符石' not in thekey:
+                                self.setArmordata(thekey, fangjuary)
 
                         print '这是防具：【' + name + '】:' + json.dumps(fangjuary, encoding="UTF-8", ensure_ascii=False)
-                        if '三界密令' not in name:
-                            whattype = 'insert into t_armordata set name='+name.replace('data_equip_name=','')+', websiteid='+'\"'+url+'\",'+parserSql(fangjuary)
-                            getAllSql.append(whattype)
+                        if '三界密令' not in name and '魔兽要诀' not in name and len(name) > 0:
+                            if len(parserSql(fangjuary)) > 1:
+                                whattype = 'insert into t_armordata set name='+name.replace('data_equip_name=','')+', websiteid='+'\"'+url+'\",'+parserSql(fangjuary)
+                                getAllSql.append(whattype)
                 print whattype
 
 
@@ -991,11 +1003,10 @@ class HtmlDownloader(object):
 
     #防具解析
     def setArmordata(self,thekey,dictionary):
-        if '五行' in thekey:
-            thislevel = re.search(r'[0-9]+',thekey, re.M | re.I)
-            dictionary['level'] = thislevel.group()
 
-        elif '耐久度' in thekey:
+
+
+        if '耐久度' in thekey:
             naijiu = re.findall(r'[0-9]+', thekey)
             count = 0
             datas=''
@@ -1006,40 +1017,39 @@ class HtmlDownloader(object):
                     datas = datas+','+val
                 count += 1
             dictionary['durable'] = datas
-        elif '防御' in thekey and '符石' not in thekey:
+        if '防御' in thekey :
             thetest = re.findall(r'防御[^\u4e00-\u9fa5]+[0-9]+', thekey)
             getthevalue=''
             for va in thetest:
                 getthevalue=va
             dictionary['defense']=getthevalue.replace("防御 ",'')
 
-        elif '气血' in thekey and '符石' not in thekey:
-
+        if '气血' in thekey :
             thetest = re.findall(r'气血[^\u4e00-\u9fa5]+[0-9]+', thekey)
             getthevalue = ''
             for va in thetest:
                 getthevalue = va
             dictionary['blood']=getthevalue.replace("气血 ",'')
-        elif '敏捷' in thekey and '符石' not in thekey:
+        if '敏捷' in thekey :
             thetest = re.findall(r'敏捷[^\u4e00-\u9fa5]+[0-9]+', thekey)
             getthevalue = ''
             for va in thetest:
                 getthevalue = va
             dictionary['speed']=getthevalue.replace("敏捷 ",'')
-        elif '魔法' in thekey and '符石' not in thekey:
+        if '魔法' in thekey :
 
             thetest = re.findall(r'魔法[^\u4e00-\u9fa5]+[0-9]+', thekey)
             getthevalue = ''
             for va in thetest:
                 getthevalue = va
             dictionary['magicpower']=getthevalue.replace("魔法 ",'')
-        elif '灵力' in thekey and '符石' not in thekey:
+        if '灵力' in thekey :
             thetest = re.findall(r'灵力[^\u4e00-\u9fa5]+[0-9]+', thekey)
             getthevalue = ''
             for va in thetest:
                 getthevalue = va
             dictionary['mana'] = getthevalue.replace("灵力 ",'')
-        elif '锻炼等级' in thekey:
+        if '锻炼等级' in thekey:
 
             duanliandengji = re.search(r'[0-9]+', thekey)
 
@@ -1049,7 +1059,7 @@ class HtmlDownloader(object):
 
             dictionary['gemstone'] = duanlianbaoshi.group().replace('宝石 ', '')
 
-        elif '#G#G' in thekey:
+        if '#G#G' in thekey:
 
             fujia = re.findall(r'[^\u4e00-\u9fa5]+[0-9]+', thekey)
 
@@ -1065,25 +1075,30 @@ class HtmlDownloader(object):
                 count += 1
 
 
-        elif '特技' in thekey:
+        if '特技' in thekey:
 
             teji = re.findall(r'[^\u4e00-\u9fa5^#]+', thekey)
 
             dictionary['stunt'] = teji[1]
 
-        elif '特效' in thekey:
+        if '特效' in thekey:
 
             texiao = re.findall(r'[^\u4e00-\u9fa5^#]+', thekey)
 
-            dictionary['effects'] = texiao[1]
+            try:
+                dictionary['effects'] = texiao[1]
+            except:
+                dictionary['effects'] = texiao[0].replace('特效：', '')
 
-        elif '开运孔数' in thekey:
+
+
+        if '开运孔数' in thekey:
 
             kaikong = re.findall(r'[\u4e00-\u9fa5]+', thekey)
 
             dictionary['holenum'] = kaikong[1]
 
-        elif '熔炼效果' in thekey:
+        if '熔炼效果' in thekey:
 
             ronglian = re.findall(r'[+|-][0-9]+[^\u4e00-\u9fa5]* ', thekey)
             thrules=''
@@ -1096,7 +1111,7 @@ class HtmlDownloader(object):
             dictionary['melting'] = thrules
 
 
-        elif '套装效果' in thekey:
+        if '套装效果' in thekey:
 
             taozhuang = re.findall(r'[^\u4e00-\u9fa5^#]+', thekey)
 
