@@ -56,6 +56,7 @@ class HtmlDownloader(object):
             content=soup.find_all("div", attrs={"class": "infoList goodsInfo"})
             content=str(content).decode('unicode-escape')
             rolesAllDate={}
+            getAllSql=[]
             print "角色网址："+url
             # 编号
             matchObj = re.search(r'编号[\s\S]*?</li>',str(content), re.M | re.I)
@@ -572,9 +573,9 @@ class HtmlDownloader(object):
             contentHave = soup.find_all("table", attrs={"id": "RoleStoreEquips"})
             contentHave = str(contentHave).decode('unicode-escape')
             print "###########人物身上的装备######"
-            self.getEquipData(str(contentUsing),url)
+            self.getEquipData(str(contentUsing),url,getAllSql)
             print "###########人物包裹的装备######"
-            self.getEquipData(str(contentHave),url)
+            self.getEquipData(str(contentHave),url,getAllSql)
 
 
             print "###########人物携带的宠物######"
@@ -606,7 +607,9 @@ class HtmlDownloader(object):
                 # print petsget.replace('\", \"',',').replace('\"], \"','').replace(': [','=').replace(': ','=')
                 petsget2 = petsget.replace('{\"','').replace('[','').replace('\", \"/',',/').replace('], \"',',').replace('\":','=').replace('}','').replace('\", \"','\", ')
 
-                print str('insert into t_petdata set websiteid=\''+url+'\', '+petsget2)
+                petsql=str('insert into t_petdata set websiteid=\"'+url+'\", '+petsget2)
+                print petsql
+                getAllSql.append(petsql)
             print "###########人物携带的祥瑞######"
             # 祥瑞
             driver.find_element_by_id("role_riders").click()
@@ -678,8 +681,18 @@ class HtmlDownloader(object):
 
             # db = MySQLdb.connect(host='47.94.213.30', user='root', passwd='chenshixiao321', db='cbg', charset='utf8')
 
-            renwushuxingsql='update t_roleData set zuoji=\"'+zuoqizong.replace('类型：','')+'\",jinyi=\"'+zuihou+'\", crawler=1 , '+renwushuxingsqlthekey+' where websiteid='+'\''+url+'\''
+            renwushuxingsql='update t_roleData set zuoji=\"'+zuoqizong.replace('类型：','')+'\",jinyi=\"'+zuihou+'\", crawler=1 , '+renwushuxingsqlthekey+' where websiteid='+'\"'+url+'\"'
+            getAllSql.append(renwushuxingsql)
             print renwushuxingsql
+
+
+            print len(getAllSql)
+            countthe=1
+            for imsql in getAllSql:
+                print '第'+str(countthe)+'条sql'
+                print imsql
+                countthe+=1
+
 
 
 
@@ -722,7 +735,7 @@ class HtmlDownloader(object):
 
 
     #获取装备信息
-    def getEquipData(self, content,url):
+    def getEquipData(self, content,url,getAllSql):
         try:
             strinfo = re.findall('<img[\s\S]*?>',content)
             for value in strinfo:
@@ -849,7 +862,8 @@ class HtmlDownloader(object):
                             self.setDictData(onevalue, twovalue, thekey, dictionary)
 
                     print '这是灵饰【' + name+'】:' +json.dumps(dictionary, encoding="UTF-8", ensure_ascii=False)
-                    whattype = 'insert into t_ornamentsdata  websiteid=' + '\"' + url + '\",' + parserSql(dictionary)
+                    whattype = 'insert into t_ornamentsdata set  websiteid=' + '\"' + url + '\",' + parserSql(dictionary)
+                    getAllSql.append(whattype)
 
                 else:
                     matchObj = re.search(r'【装备角色】[\s\S]*?\"', str(value), re.M | re.I)
@@ -926,20 +940,23 @@ class HtmlDownloader(object):
 
                             print '这是武器【' + name + '】:' + json.dumps(wuqiary, encoding="UTF-8", ensure_ascii=False)
                             whattype = 'insert into t_armsdata set name='+name.replace('data_equip_name=','')+' , websiteid=' + '\"' + url + '\",' + parserSql(wuqiary)
+                            getAllSql.append(whattype)
                         #判断是防具
                         else:
                             for thekey in datas.split("#r"):
                                 self.setArmordata(thekey,fangjuary)
                             print '这是防具：【' + name + '】:' + json.dumps(fangjuary, encoding="UTF-8", ensure_ascii=False)
-                            whattype = 'insert into t_armordata set name='+name.replace('data_equip_name=','')+', websiteid=' + '\"' + url + '\",' + parserSql(fangjuary)
+                            if '三界密令' not in name:
+                                whattype = 'insert into t_armordata set name='+name.replace('data_equip_name=','')+', websiteid=' + '\"' + url + '\",' + parserSql(fangjuary)
+                                getAllSql.append(whattype)
                     else:
                         for thekey in datas.split("#r"):
                             self.setArmordata(thekey, fangjuary)
 
                         print '这是防具：【' + name + '】:' + json.dumps(fangjuary, encoding="UTF-8", ensure_ascii=False)
-                        whattype = 'insert into t_armordata set name='+name.replace('data_equip_name=','')+', websiteid='+'\"'+url+'\",'+parserSql(fangjuary)
-
-
+                        if '三界密令' not in name:
+                            whattype = 'insert into t_armordata set name='+name.replace('data_equip_name=','')+', websiteid='+'\"'+url+'\",'+parserSql(fangjuary)
+                            getAllSql.append(whattype)
                 print whattype
 
 
@@ -1114,7 +1131,7 @@ def parserSql(df):
         except :
             pass
     sts = json.dumps(dff, encoding="UTF-8", ensure_ascii=False)
-    thekey = sts.encode("utf-8").replace('\":','=').replace(', \"',',').replace("{\"",'').replace('\"}','').replace('}','')
+    thekey = sts.encode("utf-8").replace('\":','=').replace(', \"',',').replace("{\"",'').replace('}','').replace('}','')
     return thekey
 
 
