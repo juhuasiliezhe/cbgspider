@@ -99,9 +99,10 @@ class HtmlDownloader(object):
 
 
             # 门派
-            school = self.getTheData('门派[\s\S]*?</td>', "门派：", str(content))
-            print "门派：" + school
-            rolesAllDate['school'] = school
+            school = self.getTheData('<strong>门派[\s\S]*?门贡', "门派：", str(content))
+            print "门派：" + school.replace('门贡','')
+
+            rolesAllDate['school'] = school.replace('门贡','')
 
             # 门贡
             schooloffer = self.getTheData('门贡[\s\S]*?</td>', "门贡：", str(content))
@@ -229,7 +230,7 @@ class HtmlDownloader(object):
 
             # 总经验
             # sumexperience
-            sumexperience = self.getTheData('总经验[\s\S]*?</td>', "总经验：", str(content))
+            sumexperience = self.getTheData('总经验[\s\S]*?亿', "总经验：", str(content))
             ###print "总经验：" + sumexperience
             rolesAllDate['sumexperience'] = sumexperience
 
@@ -262,8 +263,8 @@ class HtmlDownloader(object):
 
             # 历史门派
             # history
-            history = self.getTheData('历史门派[\s\S]*?</td>', "历史门派：", str(content))
-            ###print "历史门派：" + history
+            history = self.getTheData('<strong>历史门派[\s\S]*?</td>', "历史门派：", str(content))
+            print "历史门派：" + history
             rolesAllDate['history'] = history
 
             # 属性保存方案
@@ -754,221 +755,222 @@ class HtmlDownloader(object):
                         fangjuary['level'] = df.group().replace('等级','')
                     elif '【灵饰类型】' in thevalue:
                         dictionary['name'] = str(thevalue).replace("【灵饰类型】", '').replace('\"','')
+                if '召唤兽' not in getlever:
+                    if lingshi :
 
-                if lingshi:
+                        for thekey in datas.split("#r"):
 
-                    for thekey in datas.split("#r"):
+                            if '法术伤害'in thekey:
+                                onevalue = '法术伤害'
+                                twovalue = 'spell'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        if '法术伤害'in thekey:
-                            onevalue = '法术伤害'
-                            twovalue = 'spell'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '耐久度'in thekey:
+                                onevalue = '耐久度'
+                                twovalue = 'durable'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        elif '耐久度'in thekey:
-                            onevalue = '耐久度'
-                            twovalue = 'durable'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '精炼等级'in thekey:
+                                onevalue = '精炼等级'
+                                twovalue = 'exercise'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        elif '精炼等级'in thekey:
-                            onevalue = '精炼等级'
-                            twovalue = 'exercise'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '物理暴击等级'in thekey:
+                                onevalue = '物理暴击等级'
+                                twovalue = 'physicscrit'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '法术伤害' in thekey:
+                                onevalue = '法术伤害'
+                                twovalue = 'result'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        elif '物理暴击等级'in thekey:
-                            onevalue = '物理暴击等级'
-                            twovalue = 'physicscrit'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
-                        elif '法术伤害' in thekey:
-                            onevalue = '法术伤害'
-                            twovalue = 'result'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '狂暴等级'in thekey:
+                                onevalue = '狂暴等级'
+                                twovalue = 'rage'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        elif '狂暴等级'in thekey:
-                            onevalue = '狂暴等级'
-                            twovalue = 'rage'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '固定伤害'in thekey:
+                                onevalue = '固定伤害'
+                                twovalue = 'fixed'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        elif '固定伤害'in thekey:
-                            onevalue = '固定伤害'
-                            twovalue = 'fixed'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '伤害'in thekey:
 
-                        elif '伤害'in thekey:
+                                onevalue = '伤害'
+                                twovalue = 'hurt'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                            onevalue = '伤害'
-                            twovalue = 'hurt'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '穿刺等级 'in thekey:
+                                onevalue = '穿刺等级'
+                                twovalue = '穿刺puncture'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        elif '穿刺等级 'in thekey:
-                            onevalue = '穿刺等级'
-                            twovalue = '穿刺puncture'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '速度'in thekey:
+                                onevalue = '速度'
+                                twovalue = 'speed'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        elif '速度'in thekey:
-                            onevalue = '速度'
-                            twovalue = 'speed'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '封印命中等级' in thekey:
+                                onevalue = '封印命中等级'
+                                twovalue = 'seal'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '法术防御' in thekey:
+                                onevalue = '法术防御'
+                                twovalue = 'defend'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        elif '封印命中等级' in thekey:
-                            onevalue = '封印命中等级'
-                            twovalue = 'seal'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
-                        elif '法术防御' in thekey:
-                            onevalue = '法术防御'
-                            twovalue = 'defend'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '防御' in thekey and '，' not in thekey:
+                                print thekey
+                                onevalue = '防御'
+                                twovalue = 'defense'
+                                print thekey
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        elif '防御' in thekey:
-                            onevalue = '防御'
-                            twovalue = 'defense'
-                            print thekey
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
-
-                        elif '法术暴击等级' in thekey:
-                            onevalue = '法术暴击等级'
-                            twovalue = 'magiccrit'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
-
+                            elif '法术暴击等级' in thekey:
+                                onevalue = '法术暴击等级'
+                                twovalue = 'magiccrit'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
 
-                        elif '气血' in thekey:
-                            onevalue = '气血'
-                            twovalue = 'blood'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        elif '抵抗封印等级' in thekey:
-                            onevalue = '抵抗封印等级'
-                            twovalue = 'resistseal'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '气血' in thekey:
+                                onevalue = '气血'
+                                twovalue = 'blood'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        elif '格挡值' in thekey:
-                            onevalue = '格挡值'
-                            twovalue = 'block'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
-                        elif '气血回复效果' in thekey:
-                            onevalue = '气血回复效果'
-                            twovalue = 'reply'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '抵抗封印等级' in thekey:
+                                onevalue = '抵抗封印等级'
+                                twovalue = 'resistseal'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        elif '治疗能力' in thekey:
-                            onevalue = '治疗能力'
-                            twovalue = 'treatment'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
-                        elif '抗物理暴击等级' in thekey:
-                            onevalue = '抗物理暴击等级'
-                            twovalue = 'resistphysicscrit'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '格挡值' in thekey:
+                                onevalue = '格挡值'
+                                twovalue = 'block'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '气血回复效果' in thekey:
+                                onevalue = '气血回复效果'
+                                twovalue = 'reply'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                        elif '抗法术暴击等级' in thekey:
-                            onevalue='抗法术暴击等级'
-                            twovalue='resistmagiccrit'
-                            self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '治疗能力' in thekey:
+                                onevalue = '治疗能力'
+                                twovalue = 'treatment'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
+                            elif '抗物理暴击等级' in thekey:
+                                onevalue = '抗物理暴击等级'
+                                twovalue = 'resistphysicscrit'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                    print '这是灵饰【' + name+'】:' +json.dumps(dictionary, encoding="UTF-8", ensure_ascii=False)
-                    if len(parserSql(dictionary)) > 1:
-                        whattype = 'insert into t_ornamentsdata set  websiteid=' + '\"' + url + '\",' + parserSql(dictionary)
-                        getAllSql.append(whattype)
+                            elif '抗法术暴击等级' in thekey:
+                                onevalue='抗法术暴击等级'
+                                twovalue='resistmagiccrit'
+                                self.setDictData(onevalue, twovalue, thekey, dictionary)
 
-                else:
-                    matchObj = re.search(r'【装备角色】[\s\S]*?\"', str(value), re.M | re.I)
-                    #判断是武器
-                    if matchObj:
-                        if '，'in str(matchObj.group()):
-                            for thekey in datas.split("#r"):
-                                if '五行' in thekey:
-                                    thislevel= re.search(r'[0-9]+', str(value), re.M | re.I)
-                                    wuqiary['level']=thislevel.group()
-                                elif '命中' in thekey:
-                                    minzhong = re.findall(r'[0-9]+', thekey)
-                                    count = 0
-                                    for val in minzhong:
-                                        if count==0:
-                                            wuqiary['hit'] = val
-                                        else:
-                                            wuqiary['hurt'] = val
-                                        count+=1
+                        print '这是灵饰【' + name+'】:' +json.dumps(dictionary, encoding="UTF-8", ensure_ascii=False)
+                        if len(parserSql(dictionary)) > 1:
+                            whattype = 'insert into t_ornamentsdata set  websiteid=' + '\"' + url + '\",' + parserSql(dictionary)
+                            getAllSql.append(whattype)
 
-                                elif '耐久度' in thekey:
-                                    naijiu = re.findall(r'[0-9]+', thekey)
-                                    count = 0
-                                    datess=''
-                                    for val in naijiu:
-                                        if count==0:
-                                            datess= val
-                                        else:
-                                            datess= datess+','+ val
-                                        count+=1
-                                    wuqiary['durable']=datess
-                                elif '锻炼等级' in thekey:
-                                    duanliandengji = re.search(r'[0-9]+', thekey)
+                    else:
+                        matchObj = re.search(r'【装备角色】[\s\S]*?\"', str(value), re.M | re.I)
+                        #判断是武器
+                        if matchObj:
+                            if '，'in str(matchObj.group()):
+                                for thekey in datas.split("#r"):
+                                    if '五行' in thekey:
+                                        thislevel= re.search(r'[0-9]+', str(value), re.M | re.I)
+                                        wuqiary['level']=thislevel.group()
+                                    elif '命中' in thekey:
+                                        minzhong = re.findall(r'[0-9]+', thekey)
+                                        count = 0
+                                        for val in minzhong:
+                                            if count==0:
+                                                wuqiary['hit'] = val
+                                            else:
+                                                wuqiary['hurt'] = val
+                                            count+=1
 
-                                    duanlianbaoshi = re.search(r'宝石[\s\S]*', thekey)
-                                    wuqiary['exercise'] = duanliandengji.group()
-                                    wuqiary['gemstone'] = duanlianbaoshi.group().replace('宝石 ','')
-                                elif '#G#G' in thekey:
-                                    fujia = re.findall(r'[^\u4e00-\u9fa5]+[0-9]+', thekey)
+                                    elif '耐久度' in thekey:
+                                        naijiu = re.findall(r'[0-9]+', thekey)
+                                        count = 0
+                                        datess=''
+                                        for val in naijiu:
+                                            if count==0:
+                                                datess= val
+                                            else:
+                                                datess= datess+','+ val
+                                            count+=1
+                                        wuqiary['durable']=datess
+                                    elif '锻炼等级' in thekey:
+                                        duanliandengji = re.search(r'[0-9]+', thekey)
 
-                                    count = 0
-                                    for val in fujia:
-                                        if count == 0:
-                                            wuqiary['fujia'] = val
-                                        else:
-                                            wuqiary['fujia'] = wuqiary['fujia']+val
-                                        count += 1
+                                        duanlianbaoshi = re.search(r'宝石[\s\S]*', thekey)
+                                        wuqiary['exercise'] = duanliandengji.group()
+                                        wuqiary['gemstone'] = duanlianbaoshi.group().replace('宝石 ','')
+                                    elif '#G#G' in thekey:
+                                        fujia = re.findall(r'[^\u4e00-\u9fa5]+[0-9]+', thekey)
 
-                                elif '特技' in thekey:
-                                    teji = re.findall(r'[^\u4e00-\u9fa5^#]+', thekey)
-                                    wuqiary['stunt'] = teji[1]
-                                elif '特效' in thekey:
-                                    texiao = re.findall(r'[^\u4e00-\u9fa5^#]+', thekey)
-                                    for dfdd in texiao:
-                                        print dfdd
-                                    try:
-                                        wuqiary['effects'] = texiao[1]
-                                    except:
-                                        wuqiary['effects'] = texiao[0].replace('特效：','')
+                                        count = 0
+                                        for val in fujia:
+                                            if count == 0:
+                                                wuqiary['fujia'] = val
+                                            else:
+                                                wuqiary['fujia'] = wuqiary['fujia']+val
+                                            count += 1
 
-                                elif '开运孔数' in thekey:
-                                    kaikong = re.findall(r'[\u4e00-\u9fa5]+', thekey)
-                                    wuqiary['holenum'] = kaikong[1]
-                                elif '熔炼效果' in thekey:
-                                    ronglian = re.findall(r'[+|-][0-9]+[^\u4e00-\u9fa5]* ', thekey)
-                                    thrules = ''
-                                    for num in range(len(ronglian)):
-                                        if num == 0:
-                                            thrules = ronglian[num]
-                                        else:
-                                            thrules = thrules + ',' + ronglian[num]
+                                    elif '特技' in thekey:
+                                        teji = re.findall(r'[^\u4e00-\u9fa5^#]+', thekey)
+                                        wuqiary['stunt'] = teji[1]
+                                    elif '特效' in thekey:
+                                        texiao = re.findall(r'[^\u4e00-\u9fa5^#]+', thekey)
+                                        for dfdd in texiao:
+                                            print dfdd
+                                        try:
+                                            wuqiary['effects'] = texiao[1]
+                                        except:
+                                            wuqiary['effects'] = texiao[0].replace('特效：','')
 
-                                    wuqiary['melting'] = thrules
+                                    elif '开运孔数' in thekey:
+                                        kaikong = re.findall(r'[\u4e00-\u9fa5]+', thekey)
+                                        wuqiary['holenum'] = kaikong[1]
+                                    elif '熔炼效果' in thekey:
+                                        ronglian = re.findall(r'[+|-][0-9]+[^\u4e00-\u9fa5]* ', thekey)
+                                        thrules = ''
+                                        for num in range(len(ronglian)):
+                                            if num == 0:
+                                                thrules = ronglian[num]
+                                            else:
+                                                thrules = thrules + ',' + ronglian[num]
 
-                                elif '套装效果' in thekey:
-                                    taozhuang = re.findall(r'[^\u4e00-\u9fa5^#]+',thekey)
-                                    wuqiary['suit'] = taozhuang[0]
+                                        wuqiary['melting'] = thrules
 
-                            print '这是武器【' + name + '】:' + json.dumps(wuqiary, encoding="UTF-8", ensure_ascii=False)
-                            if len(parserSql(wuqiary))>1:
-                                whattype = 'insert into t_armsdata set name='+name.replace('data_equip_name=','')+' , websiteid=' + '\"' + url + '\",' + parserSql(wuqiary)
-                                getAllSql.append(whattype)
-                        #判断是防具
-                        else:
-                            for thekey in datas.split("#r"):
-                                if  '符石' not in thekey:
-                                    self.setArmordata(thekey,fangjuary)
+                                    elif '套装效果' in thekey:
+                                        taozhuang = re.findall(r'[^\u4e00-\u9fa5^#]+',thekey)
+                                        wuqiary['suit'] = taozhuang[0]
+
+                                print '这是武器【' + name + '】:' + json.dumps(wuqiary, encoding="UTF-8", ensure_ascii=False)
+                                if len(parserSql(wuqiary))>1:
+                                    whattype = 'insert into t_armsdata set name='+name.replace('data_equip_name=','')+' , websiteid=' + '\"' + url + '\",' + parserSql(wuqiary)
+                                    getAllSql.append(whattype)
+                            #判断是防具
+                            else:
+                                for thekey in datas.split("#r"):
+                                    if  '符石' not in thekey:
+                                        self.setArmordata(thekey,fangjuary)
                                 print '这是防具：【' + name + '】:' + json.dumps(fangjuary, encoding="UTF-8", ensure_ascii=False)
                                 if len(parserSql(fangjuary)) > 1:
                                     whattype = 'insert into t_armordata set name='+name.replace('data_equip_name=','')+', websiteid=' + '\"' + url + '\",' + parserSql(fangjuary)
                                     getAllSql.append(whattype)
-                    else:
-                        for thekey in datas.split("#r"):
-                            if '符石' not in thekey:
-                                self.setArmordata(thekey, fangjuary)
+                        else:
+                            for thekey in datas.split("#r"):
+                                if '符石' not in thekey:
+                                    self.setArmordata(thekey, fangjuary)
 
-                        print '这是防具：【' + name + '】:' + json.dumps(fangjuary, encoding="UTF-8", ensure_ascii=False)
-                        if '三界密令' not in name and '魔兽要诀' not in name and len(name) > 0:
-                            if len(parserSql(fangjuary)) > 1:
-                                whattype = 'insert into t_armordata set name='+name.replace('data_equip_name=','')+', websiteid='+'\"'+url+'\",'+parserSql(fangjuary)
-                                getAllSql.append(whattype)
+                            print '这是防具：【' + name + '】:' + json.dumps(fangjuary, encoding="UTF-8", ensure_ascii=False)
+                            if '三界密令' not in name and '魔兽要诀' not in name and len(name) > 0:
+                                if len(parserSql(fangjuary)) > 1:
+                                    whattype = 'insert into t_armordata set name='+name.replace('data_equip_name=','')+', websiteid='+'\"'+url+'\",'+parserSql(fangjuary)
+                                    getAllSql.append(whattype)
                 print whattype
 
 
@@ -1017,14 +1019,23 @@ class HtmlDownloader(object):
                     datas = datas+','+val
                 count += 1
             dictionary['durable'] = datas
-        if '防御' in thekey :
+        if '锻炼等级' in thekey:
+
+            duanliandengji = re.search(r'[0-9]+', thekey)
+
+            duanlianbaoshi = re.search(r'宝石[\s\S]*', thekey)
+
+            dictionary['exercise'] = duanliandengji.group()
+
+            dictionary['gemstone'] = duanlianbaoshi.group().replace('宝石 ', '')
+        if '防御' in thekey and '，' not in thekey:
             thetest = re.findall(r'防御[^\u4e00-\u9fa5]+[0-9]+', thekey)
             getthevalue=''
             for va in thetest:
                 getthevalue=va
             dictionary['defense']=getthevalue.replace("防御 ",'')
 
-        if '气血' in thekey :
+        elif '气血' in thekey :
             thetest = re.findall(r'气血[^\u4e00-\u9fa5]+[0-9]+', thekey)
             getthevalue = ''
             for va in thetest:
@@ -1049,15 +1060,7 @@ class HtmlDownloader(object):
             for va in thetest:
                 getthevalue = va
             dictionary['mana'] = getthevalue.replace("灵力 ",'')
-        if '锻炼等级' in thekey:
 
-            duanliandengji = re.search(r'[0-9]+', thekey)
-
-            duanlianbaoshi = re.search(r'宝石[\s\S]*', thekey)
-
-            dictionary['exercise'] = duanliandengji.group()
-
-            dictionary['gemstone'] = duanlianbaoshi.group().replace('宝石 ', '')
 
         if '#G#G' in thekey:
 

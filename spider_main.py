@@ -22,9 +22,9 @@ class SpiderMain(object):
         try:
             # for num in range(17):
             # while self.urls.has_new_url():
-            new_url = self.urls.get_new_url()
+            # new_url = self.urls.get_new_url()
             # if num==5:
-            self.downloader.download('http://xyq.cbg.163.com/equip?s=221&eid=201801162000113-221-1VXYAYIYKEOI')
+            self.downloader.download(root_url)
 
 
         except ValueError, Argument:
@@ -35,7 +35,8 @@ class SpiderMain(object):
 
 if __name__=="__main__":
     # root_url = "http://www.ccgp.gov.cn/cggg/zygg/cjgg/index.htm"
-    root_url = "http://xyq.cbg.163.com/cgi-bin/query.py?act=query&server_id=79&areaid=43&server_name=%C8%E7%D2%E2%B5%BA&page=1&kindid=27&kind_depth=2"
+    root_url = "http://xyq.cbg.163.com/equip?s=221&eid=201712160000113-221-UTJFJVSHVDAC"
+
     obj_spider = SpiderMain()
     obj_spider.craw(root_url)
 
