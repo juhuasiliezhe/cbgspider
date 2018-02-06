@@ -535,7 +535,7 @@ class HtmlDownloader(object):
             thekey=sts.encode("utf-8").replace('\":','=').replace(', \"',',').replace("{\"",'').replace('\"}','').replace('}','')
             ###print '人物的属性数据：'+thekey
 
-            # db = MySQLdb.connect(host='47.94.213.30', user='root', passwd='chenshixiao321', db='cbg', charset='utf8')
+            # db = MySQLdb.connect()
 
             # renwushuxingsql='update t_roleData set crawler=1 , '+renwushuxingsqlthekey+' where websiteid='+'\''+url+'\''
             renwushuxingsqlthekey=thekey
@@ -667,13 +667,13 @@ class HtmlDownloader(object):
 
             print "锦衣reservetwo：" + zuihou.replace('<th>','')
 
-            # db = MySQLdb.connect(host='47.94.213.30', user='root', passwd='chenshixiao321', db='cbg', charset='utf8')
+            # db = MySQLdb.connect()
 
             renwushuxingsql='update t_roleData set zuoji=\"'+zuoqizong.replace('类型：','')+'\",jinyi=\"'+zuihou.replace('<th>','')+'\", crawler=1 , '+renwushuxingsqlthekey+' where websiteid='+'\"'+url+'\"'
             getAllSql.append(renwushuxingsql)
             print renwushuxingsql
 
-            db = MySQLdb.connect(host='47.94.213.30', user='root', passwd='chenshixiao321', db='cbg', charset='utf8')
+            db = MySQLdb.connect()
             print len(getAllSql)
             countthe=1
             thegetdelsql='delete from t_armordata where websiteid='+'\"'+url+'\"'

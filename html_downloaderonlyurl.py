@@ -53,7 +53,7 @@ class HtmlDownloaderGetUrl(object):
         pages = re.findall(r'共[\s\S]*?页', str(getpages))
         allpage=pages[0].replace('共','').replace('页','')
 
-        db = MySQLdb.connect(host='47.94.213.30', user='root', passwd='chenshixiao321', db='cbg', charset='utf8')
+        db = MySQLdb.connect()
         # 使用cursor()方法获取操作游标
         print int(allpage)
         print '第1页'
