@@ -25,6 +25,8 @@ class SpiderMain2(object):
 
             print 'craw failed', Argument
 
+
+
         nows = datetime.datetime.now()
         print '结束时间：' + nows.strftime('%Y-%m-%d %H:%M:%S')
 
