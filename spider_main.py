@@ -35,7 +35,8 @@ class SpiderMain(object):
 
 if __name__=="__main__":
     # root_url = "http://www.ccgp.gov.cn/cggg/zygg/cjgg/index.htm"
-    root_url = "http://xyq.cbg.163.com/equip?s=221&eid=201712160000113-221-UTJFJVSHVDAC"
+    root_url = "http://xyq.cbg.163.com/equip?s=221&eid=201801282100113-221-M8QVIGPDKX4G"
+    # root_url = "http://xyq.cbg.163.com/equip?s=221&eid=201712160000113-221-UTJFJVSHVDAC"
 
     obj_spider = SpiderMain()
     obj_spider.craw(root_url)

@@ -16,6 +16,7 @@ import myssqls
 import url_manager
 import sys
 import pymysql as MySQLdb
+import theSqlData
 reload(sys)
 sys.setdefaultencoding('utf8')
 
@@ -53,7 +54,7 @@ class HtmlDownloaderGetUrl(object):
         pages = re.findall(r'共[\s\S]*?页', str(getpages))
         allpage=pages[0].replace('共','').replace('页','')
 
-        db = MySQLdb.connect(host='47.94.213.30', user='root', passwd='chenshixiao321', db='cbg', charset='utf8')
+        db = MySQLdb.connect(host=theSqlData.myhost, user=theSqlData.myuser, passwd=theSqlData.mypasswd, db=theSqlData.mydb,charset='utf8')
         # 使用cursor()方法获取操作游标
         print int(allpage)
         print '第1页'
@@ -61,12 +62,12 @@ class HtmlDownloaderGetUrl(object):
 
             print titles[index].get('href')
             strd = titles[index].get('href')
-            getmyurl = self.thesql.selectIfUrl('select  id from t_roleData where websiteid=\'' + strd + '\' ',db)
+            getmyurl = self.thesql.selectIfUrl('select  id from t_roledata where websiteid=\'' + strd + '\' ',db)
 
             if getmyurl==0:
                 price = re.search(r'onmousedown=[\s\S]*?\)', str(titles[index]))
                 theprice = price.group().replace(')', '').split(',')[1]
-                sql = "INSERT INTO t_roleData(websiteid, \
+                sql = "INSERT INTO t_roledata(websiteid, \
                                                                        servicearea, issell, crawler,price) \
                                                                        VALUES ('%s',  '%s', '%s', '%d', '%.2f' )" % \
                       (titles[index].get('href'), '黑龙江区 雪域天龙', '否', 0, float(theprice))
@@ -87,11 +88,11 @@ class HtmlDownloaderGetUrl(object):
             for index in range(len(titles)):
                 print titles[index].get('href')
                 strd=titles[index].get('href')
-                getmyurl = self.thesql.selectIfUrl('select  id from t_roleData where websiteid=\'' + strd + '\' ',db)
+                getmyurl = self.thesql.selectIfUrl('select  id from t_roledata where websiteid=\'' + strd + '\' ',db)
                 if getmyurl == 0:
                     price = re.search(r'onmousedown=[\s\S]*?\)', str(titles[index]))
                     theprice=price.group().replace(')', '').split(',')[1]
-                    sql = "INSERT INTO t_roleData(websiteid, \
+                    sql = "INSERT INTO t_roledata(websiteid, \
                                                        servicearea, issell, crawler,price) \
                                                        VALUES ('%s',  '%s', '%s', '%d', '%.2f' )" % \
                           (titles[index].get('href'), '黑龙江区 雪域天龙', '否', 0, float(theprice))

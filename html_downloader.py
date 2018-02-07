@@ -16,6 +16,7 @@ import url_manager
 import pymysql as MySQLdb
 import myssqls
 import sys
+import theSqlData
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -535,9 +536,9 @@ class HtmlDownloader(object):
             thekey=sts.encode("utf-8").replace('\":','=').replace(', \"',',').replace("{\"",'').replace('\"}','').replace('}','')
             ###print '人物的属性数据：'+thekey
 
-            # db = MySQLdb.connect(host='47.94.213.30', user='root', passwd='chenshixiao321', db='cbg', charset='utf8')
+            # db = MySQLdb.connect(host=theSqlData.myhost, user=theSqlData.myuser, passwd=theSqlData.mypasswd, db=theSqlData.mydb,charset='utf8')
 
-            # renwushuxingsql='update t_roleData set crawler=1 , '+renwushuxingsqlthekey+' where websiteid='+'\''+url+'\''
+            # renwushuxingsql='update t_roledata set crawler=1 , '+renwushuxingsqlthekey+' where websiteid='+'\''+url+'\''
             renwushuxingsqlthekey=thekey
             # print renwushuxingsql
             # self.thesql.insertDataGetBig(renwushuxingsql, db)
@@ -660,20 +661,20 @@ class HtmlDownloader(object):
             for vd in putjingyi:
                 vd = vd.replace('<th style="text-align:left">', '').replace('</th>', '')
                 if countNum == 2:
-                    zuihou = vd
+                    zuihou1 = vd
                 elif countNum > 2:
-                    zuihou = zuihou + ',' + vd
+                    zuihou1 = zuihou1 + ',' + vd
                 countNum += 1
 
-            print "锦衣reservetwo：" + zuihou.replace('<th>','')
+            print "锦衣reservetwo：" + zuihou1.replace('<th>','')
 
-            # db = MySQLdb.connect(host='47.94.213.30', user='root', passwd='chenshixiao321', db='cbg', charset='utf8')
+            # db = MySQLdb.connect(host=theSqlData.myhost, user=theSqlData.myuser, passwd=theSqlData.mypasswd, db=theSqlData.mydb,charset='utf8')
 
-            renwushuxingsql='update t_roleData set zuoji=\"'+zuoqizong.replace('类型：','')+'\",jinyi=\"'+zuihou.replace('<th>','')+'\", crawler=1 , '+renwushuxingsqlthekey+' where websiteid='+'\"'+url+'\"'
+            renwushuxingsql='update t_roledata set xiangrui=\"'+zuihou+'\", zuoji=\"'+zuoqizong.replace('类型：','')+'\",jinyi=\"'+zuihou1.replace('<th>','')+'\", crawler=1 , '+renwushuxingsqlthekey+' where websiteid='+'\"'+url+'\"'
             getAllSql.append(renwushuxingsql)
             print renwushuxingsql
 
-            db = MySQLdb.connect(host='47.94.213.30', user='root', passwd='chenshixiao321', db='cbg', charset='utf8')
+            db = MySQLdb.connect(host=theSqlData.myhost, user=theSqlData.myuser, passwd=theSqlData.mypasswd, db=theSqlData.mydb,charset='utf8')
             print len(getAllSql)
             countthe=1
             thegetdelsql='delete from t_armordata where websiteid='+'\"'+url+'\"'
@@ -1092,6 +1093,7 @@ class HtmlDownloader(object):
                 dictionary['effects'] = texiao[1]
             except:
                 dictionary['effects'] = texiao[0].replace('特效：', '')
+
 
 
 
